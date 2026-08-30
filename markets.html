@@ -1,71 +1,122 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Markets — Kereos</title>
+  <title>Kereos | Markets</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<header class="topbar">
-  <a href="index.html" class="brand">
-    <span class="brand-icon">K</span>
+<header class="navbar">
+  <a href="index.html" class="logo">
+    <span class="logo-icon">K</span>
     <span>KEREOS</span>
   </a>
 
-  <nav>
+  <nav class="nav-links">
     <a href="index.html">Terminal</a>
     <a href="markets.html" class="active">Markets</a>
     <a href="portfolio.html">Portfolio</a>
     <a href="challenges.html">Challenges</a>
   </nav>
 
-  <div class="demo-balance">
-    <small>DEMO BALANCE</small>
+  <div class="nav-balance">
+    <span>DEMO CASH</span>
     <strong id="navBalance">$10,000.00</strong>
   </div>
 </header>
 
+<main class="container page-container">
 
-<main class="container page">
+  <section class="page-header">
 
-  <section class="page-heading">
-    <div>
-      <small>MARKET EXPLORER</small>
-      <h1>Markets</h1>
-      <p>Simulated prices update automatically.</p>
-    </div>
+```
+<div>
+  <span class="eyebrow">MARKET EXPLORER</span>
+  <h1>Discover <span>Markets.</span></h1>
 
-    <div class="live-status">
-      <span></span>
-      LIVE SIMULATION
-    </div>
+  <p>
+    Search simulated meme coins, track changing prices
+    and open demo positions.
+  </p>
+</div>
+
+<div class="live-badge">
+  <span class="live-dot"></span>
+  LIVE SIMULATION
+</div>
+```
+
   </section>
-
 
   <section class="market-tools">
 
-    <input
-      id="search"
-      type="search"
-      placeholder="Search meme coins..."
-    >
+```
+<div class="search-box">
+  <span>⌕</span>
 
-    <div>
-      <button class="filter active" data-filter="all">All</button>
-      <button class="filter" data-filter="gainers">Gainers</button>
-      <button class="filter" data-filter="losers">Losers</button>
-    </div>
+  <input
+    type="text"
+    id="coinSearch"
+    placeholder="Search coin name or ticker..."
+    autocomplete="off"
+  >
+</div>
+
+
+<div class="market-filters">
+
+  <button class="filter-button active" data-filter="all">
+    All
+  </button>
+
+  <button class="filter-button" data-filter="gainers">
+    Gainers
+  </button>
+
+  <button class="filter-button" data-filter="losers">
+    Losers
+  </button>
+
+</div>
+```
 
   </section>
 
+  <div class="market-table-header">
+
+```
+<div>ASSET</div>
+<div>PRICE</div>
+<div>24H CHANGE</div>
+<div>POSITION</div>
+<div>ACTION</div>
+```
+
+  </div>
 
   <section id="marketList" class="market-list"></section>
 
+  <section id="noResults" class="empty-state hidden">
+
+```
+<div class="empty-icon">⌕</div>
+
+<h2>No token found</h2>
+
+<p>
+  Try searching for another coin name or ticker symbol.
+</p>
+```
+
+  </section>
+
 </main>
 
+<div id="toast"></div>
 
 <script src="app.js"></script>
 
