@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090611">
+<title>Kereos — Trade Beyond Limits</title>
+<link rel="icon" href="kereos-logo.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="fx"></div>
+<div class="noise"></div>
+
+<header class="topbar">
+  <button class="mobile-menu" id="mobileMenu">☰</button>
+  <a class="brand" href="#dashboard"><img src="kereos-logo.png" alt="Kereos"><span>KEREOS<small>TRADE BEYOND LIMITS</small></span></a>
+  <div class="command"><span>⌕</span><input id="globalSearch" placeholder="Search coins, markets, or commands…"><kbd>⌘ K</kbd></div>
+  <div class="top-actions"><span class="live-dot"></span><span class="live-label">LIVE MARKET</span><button id="soundBtn">◉</button><button>♢</button><div class="profile">K</div></div>
+</header>
+
+<div class="ticker" id="ticker"></div>
+
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+  <nav>
+    <a class="nav active" href="#dashboard" data-page="dashboard">⌂ <span>Dashboard</span></a>
+    <a class="nav" href="#markets" data-page="markets">◈ <span>Markets</span></a>
+    <a class="nav" href="#terminal" data-page="terminal">▣ <span>Terminal</span></a>
+    <a class="nav" href="#portfolio" data-page="portfolio">▤ <span>Portfolio</span></a>
+    <a class="nav" href="#watchlist" data-page="watchlist">☆ <span>Watchlist</span></a>
+    <a class="nav" href="#challenges" data-page="challenges">♜ <span>Challenges</span></a>
+    <a class="nav" href="#arena" data-page="arena">♛ <span>Kereos Arena</span></a>
+    <a class="nav" href="#insights" data-page="insights">◉ <span>Insights</span><b>NEW</b></a>
+  </nav>
+  <div class="side-card"><strong>TRADE<br>LEARN<br>COMPETE<br>BELONG</strong><div class="mini-orb">K</div></div>
+  <div class="demo-toggle"><span><i></i> Demo Mode</span><label><input id="demoToggle" type="checkbox" checked><em></em></label><small>No real money involved</small></div>
+</aside>
+
+<main id="app"></main>
+</div>
+
+<div class="toast-stack" id="toasts"></div>
+<div class="modal-backdrop" id="modal"></div>
+<div class="command-modal" id="commandModal">
+  <input id="cmdInput" placeholder="Search Kereos…">
+  <div id="cmdResults"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
