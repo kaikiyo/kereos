@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markets — Kereos</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="topbar">
+  <a href="index.html" class="logo">
+    <span class="logo-mark">K</span>
+    <span>KEREOS</span>
+  </a>
+
+  <nav>
+    <a href="index.html">Terminal</a>
+    <a class="active" href="markets.html">Markets</a>
+    <a href="portfolio.html">Portfolio</a>
+    <a href="challenges.html">Challenges</a>
+  </nav>
+
+  <div class="balance-box">
+    <span>Demo Balance</span>
+    <strong id="navBalance">$10,000.00</strong>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="page-header">
+    <div>
+      <p class="eyebrow">MARKET EXPLORER</p>
+      <h1>Markets</h1>
+      <p>Watch simulated meme-coin prices move in real time.</p>
+    </div>
+
+    <div class="live-pill">
+      <span></span> LIVE
+    </div>
+  </section>
+
+  <div class="market-toolbar">
+    <input
+      id="marketSearch"
+      type="search"
+      placeholder="Search tokens..."
+    >
+
+    <div class="market-filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="gainers">Gainers</button>
+      <button class="filter-btn" data-filter="losers">Losers</button>
+    </div>
+  </div>
+
+  <section id="marketList" class="market-list"></section>
+
+</main>
+
+<script src="storage.js"></script>
+<script src="price.js"></script>
+<script src="animation.js"></script>
+<script src="app.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
