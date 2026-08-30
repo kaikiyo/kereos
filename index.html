@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>KEREOS — Crypto Market Scanner</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #070a0f;
+    color: #f5f7fa;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+
+/* SIDEBAR */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 230px;
+
+    padding: 25px 18px;
+
+    background: #0b0f16;
+    border-right: 1px solid #1b2330;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 45px;
+
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.logo-icon {
+    width: 36px;
+    height: 36px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 10px;
+
+    background: linear-gradient(
+        135deg,
+        #7c5cff,
+        #4f46e5
+    );
+}
+
+.logo span {
+    color: #8f7cff;
+}
+
+
+.menu-title {
+    color: #596578;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+
+    margin: 20px 10px 10px;
+}
+
+
+.menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 12px;
+
+    margin-bottom: 4px;
+
+    border-radius: 9px;
+
+    color: #8994a5;
+
+    text-decoration: none;
+
+    font-size: 13px;
+}
+
+.menu a:hover,
+.menu a.active {
+    background: #151c28;
+    color: white;
+}
+
+
+/* MAIN */
+
+.main {
+    margin-left: 230px;
+
+    min-height: 100vh;
+
+    padding: 30px;
+}
+
+
+/* TOP */
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 28px;
+}
+
+.page-title h1 {
+    font-size: 28px;
+}
+
+.page-title p {
+    margin-top: 5px;
+
+    color: #667387;
+
+    font-size: 12px;
+}
+
+
+.network {
+    padding: 10px 14px;
+
+    border: 1px solid #222c3b;
+    border-radius: 9px;
+
+    background: #0d131d;
+
+    color: white;
+}
+
+
+/* STATS */
+
+.stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 12px;
+
+    margin-bottom: 22px;
+}
+
+.stat {
+    padding: 18px;
+
+    background: #0d131d;
+
+    border: 1px solid #1b2534;
+
+    border-radius: 12px;
+}
+
+.stat small {
+    color: #647186;
+
+    font-size: 10px;
+}
+
+.stat strong {
+    display: block;
+
+    margin-top: 8px;
+
+    font-size: 20px;
+}
+
+
+/* TOOLBAR */
+
+.toolbar {
+    display: flex;
+
+    gap: 10px;
+
+    margin-bottom: 15px;
+}
+
+.search {
+    flex: 1;
+
+    padding: 12px 15px;
+
+    border: 1px solid #202a39;
+
+    border-radius: 9px;
+
+    outline: none;
+
+    background: #0d131d;
+
+    color: white;
+}
+
+.filter {
+    padding: 0 15px;
+
+    border: 1px solid #202a39;
+
+    border-radius: 9px;
+
+    background: #0d131d;
+
+    color: #aeb7c6;
+}
+
+
+/* TABLE */
+
+.market {
+    overflow-x: auto;
+
+    border: 1px solid #1b2534;
+
+    border-radius: 13px;
+
+    background: #0b1018;
+}
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 750px;
+}
+
+thead {
+    background: #0e141e;
+}
+
+th {
+    padding: 13px;
+
+    color: #5f6d81;
+
+    text-align: left;
+
+    font-size: 10px;
+
+    font-weight: 600;
+}
+
+td {
+    padding: 15px 13px;
+
+    border-top: 1px solid #161f2c;
+
+    font-size: 12px;
+}
+
+tr:hover {
+    background: #0f1621;
+}
+
+
+/* COIN */
+
+.coin {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+.coin-icon {
+    width: 34px;
+    height: 34px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 9px;
+
+    background: #171f2c;
+
+    font-size: 18px;
+}
+
+.coin-name strong {
+    display: block;
+}
+
+.coin-name small {
+    color: #647186;
+
+    font-size: 9px;
+}
+
+
+/* PRICE */
+
+.green {
+    color: #22c55e;
+}
+
+.red {
+    color: #ef4444;
+}
+
+
+/* DEMO BUTTON */
+
+.trade {
+    padding: 7px 12px;
+
+    border: 0;
+
+    border-radius: 7px;
+
+    background: #6d5dfc;
+
+    color: white;
+
+    font-size: 10px;
+
+    font-weight: 700;
+}
+
+.trade:hover {
+    background: #806fff;
+}
+
+
+/* FOOTER */
+
+.footer {
+    margin-top: 30px;
+
+    color: #4f5b6d;
+
+    text-align: center;
+
+    font-size: 10px;
+}
+
+
+/* MOBILE */
+
+@media(max-width: 800px) {
+
+    .sidebar {
+        position: relative;
+
+        width: 100%;
+        height: auto;
+
+        border-right: 0;
+
+        border-bottom: 1px solid #1b2330;
+    }
+
+    .logo {
+        margin-bottom: 20px;
+    }
+
+    .menu {
+        display: flex;
+
+        gap: 5px;
+
+        overflow-x: auto;
+    }
+
+    .menu-title {
+        display: none;
+    }
+
+    .menu a {
+        white-space: nowrap;
+    }
+
+    .main {
+        margin-left: 0;
+
+        padding: 20px;
+    }
+
+    .stats {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+
+@media(max-width: 500px) {
+
+    .topbar {
+        display: block;
+    }
+
+    .network {
+        margin-top: 15px;
+    }
+
+    .toolbar {
+        display: grid;
+
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+    .search {
+        grid-column: 1 / -1;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<aside class="sidebar">
+
+```
+<div class="logo">
+
+    <div class="logo-icon">
+        K
+    </div>
+
+    KERE<span>OS</span>
+
+</div>
+
+
+<div class="menu-title">
+    DISCOVER
+</div>
+
+
+<div class="menu">
+
+    <a href="#" class="active">
+        🔥 Trending
+    </a>
+
+    <a href="#">
+        📊 Markets
+    </a>
+
+    <a href="#">
+        ⭐ Watchlist
+    </a>
+
+</div>
+
+
+<div class="menu-title">
+    ACCOUNT
+</div>
+
+
+<div class="menu">
+
+    <a href="#">
+        💼 Portfolio
+    </a>
+
+    <a href="#">
+        📜 Trade History
+    </a>
+
+</div>
+```
+
+</aside>
+
+<main class="main">
+
+```
+<div class="topbar">
+
+    <div class="page-title">
+
+        <h1>
+            Market Scanner
+        </h1>
+
+        <p>
+            Discover trending crypto pairs
+        </p>
+
+    </div>
+
+
+    <select class="network">
+
+        <option>
+            🌐 All Networks
+        </option>
+
+        <option>
+            Solana
+        </option>
+
+        <option>
+            Ethereum
+        </option>
+
+        <option>
+            Base
+        </option>
+
+        <option>
+            BNB Chain
+        </option>
+
+    </select>
+
+</div>
+
+
+
+<section class="stats">
+
+    <div class="stat">
+
+        <small>
+            MARKET CAP
+        </small>
+
+        <strong>
+            $2.41T
+        </strong>
+
+    </div>
+
+
+    <div class="stat">
+
+        <small>
+            24H VOLUME
+        </small>
+
+        <strong>
+            $86.4B
+        </strong>
+
+    </div>
+
+
+    <div class="stat">
+
+        <small>
+            TRENDING
+        </small>
+
+        <strong>
+            1,284
+        </strong>
+
+    </div>
+
+
+    <div class="stat">
+
+        <small>
+            DEMO BALANCE
+        </small>
+
+        <strong>
+            $10,000
+        </strong>
+
+    </div>
+
+</section>
+
+
+
+<section class="toolbar">
+
+    <input
+        class="search"
+        placeholder="Search token, symbol or pair..."
+    >
+
+
+    <select class="filter">
+
+        <option>
+            All
+        </option>
+
+        <option>
+            Gainers
+        </option>
+
+        <option>
+            Losers
+        </option>
+
+        <option>
+            High Volume
+        </option>
+
+    </select>
+
+
+    <select class="filter">
+
+        <option>
+            24H
+        </option>
+
+        <option>
+            1H
+        </option>
+
+        <option>
+            6H
+        </option>
+
+    </select>
+
+</section>
+
+
+
+<section class="market">
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    TOKEN
+                </th>
+
+                <th>
+                    PRICE
+                </th>
+
+                <th>
+                    24H
+                </th>
+
+                <th>
+                    VOLUME
+                </th>
+
+                <th>
+                    LIQUIDITY
+                </th>
+
+                <th>
+                    MARKET CAP
+                </th>
+
+                <th>
+                    TRADE
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+
+            <tr>
+
+                <td>
+
+                    <div class="coin">
+
+                        <div class="coin-icon">
+                            🐶
+                        </div>
+
+                        <div class="coin-name">
+
+                            <strong>
+                                Dogecoin
+                            </strong>
+
+                            <small>
+                                DOGE
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </td>
+
+
+                <td>
+                    $0.2142
+                </td>
+
+
+                <td class="green">
+                    +6.82%
+                </td>
+
+
+                <td>
+                    $1.24B
+                </td>
+
+
+                <td>
+                    $482M
+                </td>
+
+
+                <td>
+                    $31.7B
+                </td>
+
+
+                <td>
+                    <button class="trade">
+                        DEMO TRADE
+                    </button>
+                </td>
+
+            </tr>
+
+
+
+            <tr>
+
+                <td>
+
+                    <div class="coin">
+
+                        <div class="coin-icon">
+                            🐸
+                        </div>
+
+                        <div class="coin-name">
+
+                            <strong>
+                                Pepe
+                            </strong>
+
+                            <small>
+                                PEPE
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </td>
+
+
+                <td>
+                    $0.000012
+                </td>
+
+
+                <td class="green">
+                    +12.41%
+                </td>
+
+
+                <td>
+                    $874M
+                </td>
+
+
+                <td>
+                    $221M
+                </td>
+
+
+                <td>
+                    $5.1B
+                </td>
+
+
+                <td>
+                    <button class="trade">
+                        DEMO TRADE
+                    </button>
+                </td>
+
+            </tr>
+
+
+
+            <tr>
+
+                <td>
+
+                    <div class="coin">
+
+                        <div class="coin-icon">
+                            🐕
+                        </div>
+
+                        <div class="coin-name">
+
+                            <strong>
+                                Shiba Inu
+                            </strong>
+
+                            <small>
+                                SHIB
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </td>
+
+
+                <td>
+                    $0.000014
+                </td>
+
+
+                <td class="red">
+                    -2.31%
+                </td>
+
+
+                <td>
+                    $428M
+                </td>
+
+
+                <td>
+                    $189M
+                </td>
+
+
+                <td>
+                    $8.2B
+                </td>
+
+
+                <td>
+                    <button class="trade">
+                        DEMO TRADE
+                    </button>
+                </td>
+
+            </tr>
+
+
+
+            <tr>
+
+                <td>
+
+                    <div class="coin">
+
+                        <div class="coin-icon">
+                            🐕
+                        </div>
+
+                        <div class="coin-name">
+
+                            <strong>
+                                Bonk
+                            </strong>
+
+                            <small>
+                                BONK
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </td>
+
+
+                <td>
+                    $0.000021
+                </td>
+
+
+                <td class="green">
+                    +9.27%
+                </td>
+
+
+                <td>
+                    $312M
+                </td>
+
+
+                <td>
+                    $105M
+                </td>
+
+
+                <td>
+                    $1.6B
+                </td>
+
+
+                <td>
+                    <button class="trade">
+                        DEMO TRADE
+                    </button>
+                </td>
+
+            </tr>
+
+
+        </tbody>
+
+    </table>
+
+</section>
+
+
+
+<div class="footer">
+
+    KEREOS · Crypto market scanner ·
+    Paper trading only
+
+</div>
+```
+
+</main>
+
+</body>
+</html>
