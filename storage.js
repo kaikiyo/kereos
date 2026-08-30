@@ -1,53 +1,67 @@
-const STORAGE_KEY = "kereos_demo_account_v2";
+const KEREOS_STORAGE_KEY = "kereos_demo_v4";
 
-const defaultAccount = {
+const DEFAULT_ACCOUNT = {
   balance: 10000,
   positions: {},
   trades: [],
-  selectedCoin: "PEPE"
+  challenge: {
+    active: false,
+    startBalance: 100,
+    target: 200,
+    currentBalance: 100
+  }
 };
+
+function cloneDefaultAccount() {
+  return JSON.parse(JSON.stringify(DEFAULT_ACCOUNT));
+}
 
 function loadAccount() {
   try {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = localStorage.getItem(KEREOS_STORAGE_KEY);
 
     if (!saved) {
-      return structuredClone(defaultAccount);
+      return cloneDefaultAccount();
     }
 
-    const account = JSON.parse(saved);
+    const parsed = JSON.parse(saved);
 
     return {
-      ...structuredClone(defaultAccount),
-      ...account,
-      positions: account.positions || {},
-      trades: account.trades || []
+      ...cloneDefaultAccount(),
+      ...parsed,
+      positions: parsed.positions || {},
+      trades: parsed.trades || {},
+      challenge: {
+        ...cloneDefaultAccount().challenge,
+        ...(parsed.challenge || {})
+      }
     };
-
   } catch (error) {
-    console.error("Could not load account:", error);
-    return structuredClone(defaultAccount);
+    console.error("Kereos storage error:", error);
+    return cloneDefaultAccount();
   }
 }
 
 let account = loadAccount();
 
 function saveAccount() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(account));
+  localStorage.setItem(
+    KEREOS_STORAGE_KEY,
+    JSON.stringify(account)
+  );
 }
 
 function resetAccount() {
-  account = structuredClone(defaultAccount);
+  account = cloneDefaultAccount();
   saveAccount();
-  location.reload();
 }
 
 function getBalance() {
-  return account.balance;
+  return Number(account.balance) || 0;
 }
 
 function setBalance(value) {
-  account.balance = Math.max(0, Number(value));
+  account.balance = Math.max(0, Number(value) || 0);
   saveAccount();
 }
 
@@ -72,22 +86,28 @@ function removePosition(symbol) {
 function addTrade(trade) {
   account.trades.unshift(trade);
 
-  if (account.trades.length > 100) {
-    account.trades = account.trades.slice(0, 100);
+  if (account.trades.length > 200) {
+    account.trades.length = 200;
   }
 
   saveAccount();
 }
 
 function getTrades() {
-  return account.trades;
+  return Array.isArray(account.trades)
+    ? account.trades
+    : [];
 }
 
-function setSelectedCoin(symbol) {
-  account.selectedCoin = symbol;
+function getChallenge() {
+  return account.challenge;
+}
+
+function updateChallenge(data) {
+  account.challenge = {
+    ...account.challenge,
+    ...data
+  };
+
   saveAccount();
-}
-
-function getSelectedCoin() {
-  return account.selectedCoin;
 }
