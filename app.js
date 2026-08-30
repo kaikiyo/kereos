@@ -1,153 +1,214 @@
-let selectedSymbol = getSelectedCoin();
-let tradeSide = "buy";
+let selectedSymbol =
+  "PEPE";
 
-document.addEventListener("DOMContentLoaded", () => {
+let tradeSide = "BUY";
 
-  setupNavigation();
-  setupTrading();
-  setupMarketStrip();
-  setupTimeframes();
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
 
-  selectedSymbol = getSelectedCoin();
+    selectedSymbol =
+      localStorage.getItem(
+        "kereos_selected_coin"
+      ) || "PEPE";
 
-  updateEverything();
+    setupMobileMenu();
+    setupNavigation();
+    setupTradeControls();
+    setupCoinSelector();
 
-  createChart();
+    updateUI();
 
-  setInterval(updateEverything, 1000);
-});
+    if (
+      document.getElementById("chart")
+    ) {
+      initChart(selectedSymbol);
+    }
+
+    setInterval(
+      updateUI,
+      1000
+    );
+  }
+);
+
+function setupMobileMenu() {
+
+  const button =
+    document.getElementById(
+      "mobileMenu"
+    );
+
+  const nav =
+    document.getElementById(
+      "mainNav"
+    );
+
+  if (!button || !nav) return;
+
+  button.addEventListener(
+    "click",
+    () => {
+      nav.classList.toggle(
+        "mobile-open"
+      );
+    }
+  );
+}
 
 function setupNavigation() {
 
-  const menu =
-    document.getElementById("mobileMenu");
+  document.querySelectorAll(
+    "[data-nav]"
+  ).forEach(link => {
 
-  const nav =
-    document.querySelector(".nav");
+    link.addEventListener(
+      "click",
+      () => {
 
-  if (menu && nav) {
-    menu.addEventListener("click", () => {
-      nav.classList.toggle("open");
-    });
-  }
-}
-
-function setupTrading() {
-
-  document.querySelectorAll(".trade-tab")
-    .forEach(button => {
-
-      button.addEventListener("click", () => {
-
-        document.querySelectorAll(".trade-tab")
-          .forEach(btn =>
-            btn.classList.remove("active")
+        const nav =
+          document.getElementById(
+            "mainNav"
           );
 
-        button.classList.add("active");
+        if (nav) {
+          nav.classList.remove(
+            "mobile-open"
+          );
+        }
+      }
+    );
+  });
+}
+
+function setupTradeControls() {
+
+  document.querySelectorAll(
+    ".trade-tab"
+  ).forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        document
+          .querySelectorAll(
+            ".trade-tab"
+          )
+          .forEach(btn =>
+            btn.classList.remove(
+              "active"
+            )
+          );
+
+        button.classList.add(
+          "active"
+        );
 
         tradeSide =
           button.dataset.side;
 
         updateTradeButton();
-      });
-    });
+      }
+    );
+  });
 
-  document.querySelectorAll(".quick-amounts button")
-    .forEach(button => {
+  document.querySelectorAll(
+    "[data-amount]"
+  ).forEach(button => {
 
-      button.addEventListener("click", () => {
+    button.addEventListener(
+      "click",
+      () => {
 
         const input =
-          document.getElementById("tradeAmount");
+          document.getElementById(
+            "tradeAmount"
+          );
 
-        input.value =
-          button.dataset.amount;
-      });
-    });
+        if (input) {
+          input.value =
+            button.dataset.amount;
+        }
+      }
+    );
+  });
 
-  const tradeButton =
-    document.getElementById("tradeButton");
+  const button =
+    document.getElementById(
+      "tradeButton"
+    );
 
-  if (tradeButton) {
-    tradeButton.addEventListener(
+  if (button) {
+    button.addEventListener(
       "click",
       executeTrade
     );
   }
 }
 
-function setupMarketStrip() {
+function setupCoinSelector() {
 
   const strip =
-    document.getElementById("marketStrip");
+    document.getElementById(
+      "marketStrip"
+    );
 
   if (!strip) return;
 
-  Object.keys(COINS).forEach(symbol => {
+  Object.keys(COINS).forEach(
+    symbol => {
 
-    const coin = COINS[symbol];
+      const coin =
+        COINS[symbol];
 
-    const card =
-      document.createElement("div");
+      const card =
+        document.createElement(
+          "button"
+        );
 
-    card.className = "market-card";
+      card.className =
+        "market-card";
 
-    card.dataset.symbol = symbol;
+      card.dataset.symbol =
+        symbol;
 
-    card.innerHTML = `
-      <div class="market-card-top">
-        <div class="coin-icon">
-          ${coin.icon}
+      card.innerHTML = `
+        <div class="market-card-top">
+          <span class="coin-icon">
+            ${coin.icon}
+          </span>
+
+          <span>
+            <strong>${coin.symbol}</strong>
+            <small>${coin.name}</small>
+          </span>
         </div>
 
-        <div>
-          <strong>${coin.symbol}</strong>
-          <small>${coin.name}</small>
-        </div>
-      </div>
+        <strong
+          class="market-price"
+          data-price="${symbol}">
+          ${formatPrice(
+            getPrice(symbol)
+          )}
+        </strong>
 
-      <strong class="market-price"
-        data-price="${symbol}">
-        ${formatPrice(getPrice(symbol))}
-      </strong>
+        <small
+          class="market-change"
+          data-change="${symbol}">
+          ${getChange(symbol) >= 0 ? "+" : ""}
+          ${getChange(symbol).toFixed(2)}%
+        </small>
+      `;
 
-      <small
-        class="market-change"
-        data-change="${symbol}">
-        ${getChange(symbol).toFixed(2)}%
-      </small>
-    `;
+      card.addEventListener(
+        "click",
+        () => selectCoin(symbol)
+      );
 
-    card.addEventListener("click", () => {
-      selectCoin(symbol);
-    });
-
-    strip.appendChild(card);
-  });
-}
-
-function setupTimeframes() {
-
-  document.querySelectorAll(".timeframe")
-    .forEach(button => {
-
-      button.addEventListener("click", () => {
-
-        document.querySelectorAll(".timeframe")
-          .forEach(btn =>
-            btn.classList.remove("active")
-          );
-
-        button.classList.add("active");
-
-        /*
-          The demo currently uses the same simulated
-          stream for each timeframe.
-        */
-        refreshChart();
-      });
-    });
+      strip.appendChild(card);
+    }
+  );
 }
 
 function selectCoin(symbol) {
@@ -156,95 +217,135 @@ function selectCoin(symbol) {
 
   selectedSymbol = symbol;
 
-  setSelectedCoin(symbol);
+  localStorage.setItem(
+    "kereos_selected_coin",
+    symbol
+  );
 
-  updateEverything();
+  updateUI();
 
-  if (typeof updateChart === "function") {
-    updateChart(symbol);
+  if (
+    document.getElementById(
+      "chart"
+    )
+  ) {
+    initChart(symbol);
   }
 }
 
-function updateEverything() {
+function updateUI() {
 
-  updateHeader();
-
+  updateBalance();
   updateSelectedCoin();
-
   updateMarketCards();
-
-  updatePositionPreview();
-
-  updatePositionsList();
-
+  updatePosition();
+  updatePositions();
   updateTradeButton();
 }
 
-function updateHeader() {
+function updateBalance() {
 
   const balance =
-    document.getElementById("headerBalance");
-
-  const available =
-    document.getElementById("availableBalance");
-
-  const value =
     formatMoney(getBalance());
 
-  if (balance) balance.textContent = value;
-  if (available) available.textContent = value;
+  const header =
+    document.getElementById(
+      "headerBalance"
+    );
+
+  const available =
+    document.getElementById(
+      "availableBalance"
+    );
+
+  if (header) {
+    header.textContent = balance;
+  }
+
+  if (available) {
+    available.textContent =
+      balance;
+  }
 }
 
 function updateSelectedCoin() {
 
-  const coin = COINS[selectedSymbol];
+  const coin =
+    COINS[selectedSymbol];
 
   if (!coin) return;
 
-  const price = getPrice(selectedSymbol);
-  const change = getChange(selectedSymbol);
+  const price =
+    getPrice(selectedSymbol);
+
+  const change =
+    getChange(selectedSymbol);
 
   const icon =
-    document.getElementById("selectedCoinIcon");
+    document.getElementById(
+      "selectedCoinIcon"
+    );
 
   const name =
-    document.getElementById("selectedCoinName");
+    document.getElementById(
+      "selectedCoinName"
+    );
 
   const symbol =
-    document.getElementById("selectedCoinSymbol");
+    document.getElementById(
+      "selectedCoinSymbol"
+    );
 
-  const priceEl =
-    document.getElementById("selectedPrice");
+  const priceElement =
+    document.getElementById(
+      "selectedPrice"
+    );
 
-  const changeEl =
-    document.getElementById("selectedChange");
+  const changeElement =
+    document.getElementById(
+      "selectedChange"
+    );
 
   const tradePrice =
-    document.getElementById("tradePrice");
+    document.getElementById(
+      "tradePrice"
+    );
 
-  if (icon) icon.textContent = coin.icon;
-  if (name) name.textContent = coin.name;
-  if (symbol) symbol.textContent = coin.symbol;
+  if (icon) {
+    icon.textContent =
+      coin.icon;
+  }
 
-  if (priceEl) {
+  if (name) {
+    name.textContent =
+      coin.name;
+  }
 
-    const oldPrice =
+  if (symbol) {
+    symbol.textContent =
+      coin.symbol;
+  }
+
+  if (priceElement) {
+
+    const previous =
       Number(
-        priceEl.dataset.price ||
+        priceElement.dataset.price ||
         price
       );
 
-    flashPrice(
-      priceEl,
-      price >= oldPrice
+    flashElement(
+      priceElement,
+      price >= previous
         ? "up"
         : "down"
     );
 
-    priceEl.textContent =
+    priceElement.textContent =
       formatPrice(price);
 
-    priceEl.dataset.price = price;
+    priceElement.dataset.price =
+      price;
   }
 
   if (tradePrice) {
@@ -252,68 +353,77 @@ function updateSelectedCoin() {
       formatPrice(price);
   }
 
-  if (changeEl) {
+  if (changeElement) {
 
-    changeEl.textContent =
+    changeElement.textContent =
       `${change >= 0 ? "+" : ""}${change.toFixed(2)}%`;
 
-    changeEl.className =
+    changeElement.className =
       change >= 0
         ? "positive"
         : "negative";
   }
-
-  document.querySelectorAll(".market-card")
-    .forEach(card => {
-
-      card.classList.toggle(
-        "active",
-        card.dataset.symbol === selectedSymbol
-      );
-
-    });
 }
 
 function updateMarketCards() {
 
-  Object.keys(COINS).forEach(symbol => {
+  Object.keys(COINS).forEach(
+    symbol => {
 
-    const priceEl =
-      document.querySelector(
-        `[data-price="${symbol}"]`
-      );
+      const priceElement =
+        document.querySelector(
+          `[data-price="${symbol}"]`
+        );
 
-    const changeEl =
-      document.querySelector(
-        `[data-change="${symbol}"]`
-      );
+      const changeElement =
+        document.querySelector(
+          `[data-change="${symbol}"]`
+        );
 
-    if (priceEl) {
-      priceEl.textContent =
-        formatPrice(getPrice(symbol));
+      if (priceElement) {
+        priceElement.textContent =
+          formatPrice(
+            getPrice(symbol)
+          );
+      }
+
+      if (changeElement) {
+
+        const change =
+          getChange(symbol);
+
+        changeElement.textContent =
+          `${change >= 0 ? "+" : ""}${change.toFixed(2)}%`;
+
+        changeElement.className =
+          "market-change " +
+          (
+            change >= 0
+              ? "positive"
+              : "negative"
+          );
+      }
     }
+  );
 
-    if (changeEl) {
+  document.querySelectorAll(
+    ".market-card"
+  ).forEach(card => {
 
-      const change =
-        getChange(symbol);
-
-      changeEl.textContent =
-        `${change >= 0 ? "+" : ""}${change.toFixed(2)}%`;
-
-      changeEl.className =
-        "market-change " +
-        (change >= 0
-          ? "positive"
-          : "negative");
-    }
+    card.classList.toggle(
+      "active",
+      card.dataset.symbol ===
+      selectedSymbol
+    );
   });
 }
 
 function updateTradeButton() {
 
   const button =
-    document.getElementById("tradeButton");
+    document.getElementById(
+      "tradeButton"
+    );
 
   if (!button) return;
 
@@ -321,131 +431,123 @@ function updateTradeButton() {
     COINS[selectedSymbol];
 
   button.textContent =
-    `${tradeSide === "buy" ? "Buy" : "Sell"} ${coin.symbol}`;
+    `${tradeSide === "BUY" ? "Buy" : "Sell"} ${coin.symbol}`;
 
-  button.classList.toggle(
-    "buy-button",
-    tradeSide === "buy"
-  );
-
-  button.classList.toggle(
-    "sell-button",
-    tradeSide === "sell"
-  );
+  button.className =
+    "trade-button " +
+    (
+      tradeSide === "BUY"
+        ? "buy-button"
+        : "sell-button"
+    );
 }
 
 function executeTrade() {
 
   const input =
-    document.getElementById("tradeAmount");
+    document.getElementById(
+      "tradeAmount"
+    );
 
   const amount =
-    Number(input.value);
+    Number(input?.value);
 
   if (!amount || amount <= 0) {
+
     showToast(
       "Enter a valid amount.",
       "normal"
     );
+
     return;
   }
 
   const price =
     getPrice(selectedSymbol);
 
-  if (tradeSide === "buy") {
-
-    buyCoin(
-      selectedSymbol,
-      amount,
-      price
-    );
-
+  if (tradeSide === "BUY") {
+    buy(selectedSymbol, amount, price);
   } else {
-
-    sellCoin(
-      selectedSymbol,
-      amount,
-      price
-    );
+    sell(selectedSymbol, amount, price);
   }
 }
 
-function buyCoin(symbol, usdAmount, price) {
+function buy(symbol, usd, price) {
 
-  if (usdAmount > getBalance()) {
+  if (usd > getBalance()) {
 
     showToast(
-      "Insufficient demo balance.",
+      "Not enough demo balance.",
       "normal"
     );
 
     return;
   }
 
-  const oldPosition =
+  const quantity =
+    usd / price;
+
+  const existing =
     getPosition(symbol);
 
-  const quantity =
-    usdAmount / price;
+  if (existing) {
 
-  if (oldPosition) {
+    const newCost =
+      existing.cost + usd;
 
-    const totalCost =
-      oldPosition.cost + usdAmount;
+    const newQuantity =
+      existing.quantity +
+      quantity;
 
-    const totalQuantity =
-      oldPosition.quantity + quantity;
+    existing.quantity =
+      newQuantity;
 
-    oldPosition.quantity =
-      totalQuantity;
+    existing.cost =
+      newCost;
 
-    oldPosition.cost =
-      totalCost;
+    existing.entryPrice =
+      newCost / newQuantity;
 
-    oldPosition.entryPrice =
-      totalCost / totalQuantity;
-
-    savePosition(oldPosition);
+    savePosition(existing);
 
   } else {
 
     savePosition({
       symbol,
       quantity,
-      cost: usdAmount,
+      cost: usd,
       entryPrice: price,
       openedAt: Date.now()
     });
   }
 
   setBalance(
-    getBalance() - usdAmount
+    getBalance() - usd
   );
 
   addTrade({
     id: Date.now(),
     symbol,
     side: "BUY",
-    amount: usdAmount,
+    amount: usd,
     quantity,
     price,
-    timestamp: Math.floor(Date.now() / 1000)
+    timestamp:
+      Math.floor(
+        Date.now() / 1000
+      )
   });
 
   showToast(
-    `Bought ${COINS[symbol].name} for ${formatMoney(usdAmount)}`,
+    `Bought ${COINS[symbol].name} for ${formatMoney(usd)}`,
     "buy"
   );
 
-  updateEverything();
-
-  if (currentChartSymbol === symbol) {
-    refreshChart();
-  }
+  updateUI();
+  refreshChart();
 }
 
-function sellCoin(symbol, usdAmount, price) {
+function sell(symbol, usd, price) {
 
   const position =
     getPosition(symbol);
@@ -460,40 +562,48 @@ function sellCoin(symbol, usdAmount, price) {
     return;
   }
 
-  const sellAmount =
+  const currentValue =
+    position.quantity * price;
+
+  const amount =
     Math.min(
-      usdAmount,
-      position.quantity * price
+      usd,
+      currentValue
     );
 
   const quantitySold =
-    sellAmount / price;
+    amount / price;
 
-  position.quantity -= quantitySold;
-
-  const proportion =
+  const ratio =
     quantitySold /
-    (position.quantity + quantitySold);
+    position.quantity;
 
-  position.cost -=
-    position.cost * proportion;
+  position.quantity -=
+    quantitySold;
+
+  position.cost *=
+    Math.max(0, 1 - ratio);
 
   setBalance(
-    getBalance() + sellAmount
+    getBalance() + amount
   );
 
   addTrade({
     id: Date.now(),
     symbol,
     side: "SELL",
-    amount: sellAmount,
+    amount,
     quantity: quantitySold,
     price,
-    timestamp: Math.floor(Date.now() / 1000)
+    timestamp:
+      Math.floor(
+        Date.now() / 1000
+      )
   });
 
   if (
-    position.quantity <= 0.0000000001
+    position.quantity <=
+    0.0000000001
   ) {
 
     removePosition(symbol);
@@ -504,59 +614,66 @@ function sellCoin(symbol, usdAmount, price) {
   }
 
   showToast(
-    `Sold ${COINS[symbol].name} for ${formatMoney(sellAmount)}`,
+    `Sold ${COINS[symbol].name} for ${formatMoney(amount)}`,
     "sell"
   );
 
-  updateEverything();
-
-  if (currentChartSymbol === symbol) {
-    refreshChart();
-  }
+  updateUI();
+  refreshChart();
 }
 
-function updatePositionPreview() {
+function updatePosition() {
 
   const position =
     getPosition(selectedSymbol);
 
-  const quantityEl =
-    document.getElementById("positionQuantity");
+  const quantity =
+    document.getElementById(
+      "positionQuantity"
+    );
 
-  const entryEl =
-    document.getElementById("positionEntry");
+  const entry =
+    document.getElementById(
+      "positionEntry"
+    );
 
-  const valueEl =
-    document.getElementById("positionValue");
+  const value =
+    document.getElementById(
+      "positionValue"
+    );
 
-  const pnlEl =
-    document.getElementById("positionPnl");
+  const pnl =
+    document.getElementById(
+      "positionPnl"
+    );
 
-  const statusEl =
-    document.getElementById("positionStatus");
-
-  const chartPosition =
-    document.getElementById("chartPositionText");
+  const status =
+    document.getElementById(
+      "positionStatus"
+    );
 
   if (!position) {
 
-    if (quantityEl) quantityEl.textContent = "0";
-    if (entryEl) entryEl.textContent = "$0.00000000";
-    if (valueEl) valueEl.textContent = "$0.00";
+    if (quantity)
+      quantity.textContent = "0";
 
-    if (pnlEl) {
-      pnlEl.textContent = "$0.00";
-      pnlEl.className = "";
+    if (entry)
+      entry.textContent =
+        "$0.00000000";
+
+    if (value)
+      value.textContent =
+        "$0.00";
+
+    if (pnl) {
+      pnl.textContent =
+        "$0.00";
+      pnl.className = "";
     }
 
-    if (statusEl) {
-      statusEl.textContent = "None";
-    }
-
-    if (chartPosition) {
-      chartPosition.textContent =
-        "No open position";
-    }
+    if (status)
+      status.textContent =
+        "No position";
 
     return;
   }
@@ -564,64 +681,61 @@ function updatePositionPreview() {
   const currentPrice =
     getPrice(selectedSymbol);
 
-  const value =
+  const currentValue =
     position.quantity *
     currentPrice;
 
-  const pnl =
-    value - position.cost;
+  const profit =
+    currentValue -
+    position.cost;
 
-  const pnlPercent =
+  const percent =
     position.cost > 0
-      ? (pnl / position.cost) * 100
+      ? (profit /
+          position.cost) *
+        100
       : 0;
 
-  if (quantityEl) {
-    quantityEl.textContent =
-      formatQuantity(position.quantity);
-  }
+  if (quantity)
+    quantity.textContent =
+      formatQuantity(
+        position.quantity
+      );
 
-  if (entryEl) {
-    entryEl.textContent =
-      formatPrice(position.entryPrice);
-  }
+  if (entry)
+    entry.textContent =
+      formatPrice(
+        position.entryPrice
+      );
 
-  if (valueEl) {
-    valueEl.textContent =
-      formatMoney(value);
-  }
+  if (value)
+    value.textContent =
+      formatMoney(
+        currentValue
+      );
 
-  if (pnlEl) {
+  if (pnl) {
 
-    pnlEl.textContent =
-      `${pnl >= 0 ? "+" : ""}${formatMoney(pnl)} (${pnlPercent.toFixed(2)}%)`;
+    pnl.textContent =
+      `${profit >= 0 ? "+" : ""}${formatMoney(profit)} (${percent.toFixed(2)}%)`;
 
-    pnlEl.className =
-      pnl >= 0
+    pnl.className =
+      profit >= 0
         ? "positive"
         : "negative";
   }
 
-  if (statusEl) {
-    statusEl.textContent = "Open";
-  }
-
-  if (chartPosition) {
-
-    chartPosition.textContent =
-      `Entry ${formatPrice(position.entryPrice)} • P&L ${formatMoney(pnl)}`;
-
-    chartPosition.className =
-      pnl >= 0
-        ? "positive"
-        : "negative";
-  }
+  if (status)
+    status.textContent =
+      "Open";
 }
 
-function updatePositionsList() {
+function updatePositions() {
 
   const list =
-    document.getElementById("positionsList");
+    document.getElementById(
+      "positionsList"
+    );
 
   if (!list) return;
 
@@ -632,9 +746,9 @@ function updatePositionsList() {
 
     list.innerHTML = `
       <div class="empty-state">
-        No open positions yet.
+        No open positions.
         <br>
-        Choose a meme coin above to start your demo trade.
+        Start a demo trade to see it here.
       </div>
     `;
 
@@ -642,88 +756,124 @@ function updatePositionsList() {
   }
 
   list.innerHTML =
-    positions.map(position => {
+    positions.map(
+      position => {
 
-      const coin =
-        COINS[position.symbol];
+        const coin =
+          COINS[position.symbol];
 
-      const current =
-        getPrice(position.symbol);
-
-      const value =
-        position.quantity * current;
-
-      const pnl =
-        value - position.cost;
-
-      return `
-        <div class="position-card">
-
-          <div class="position-coin">
-            <div class="coin-icon">
-              ${coin.icon}
-            </div>
-
-            <div>
-              <strong>${coin.name}</strong>
-              <small>${coin.symbol}</small>
-            </div>
-          </div>
-
-          <div class="position-metric">
-            <span>Entry</span>
-            <strong>${formatPrice(position.entryPrice)}</strong>
-          </div>
-
-          <div class="position-metric">
-            <span>Value</span>
-            <strong>${formatMoney(value)}</strong>
-          </div>
-
-          <div class="position-metric">
-            <span>P&L</span>
-            <strong class="${pnl >= 0 ? "positive" : "negative"}">
-              ${pnl >= 0 ? "+" : ""}${formatMoney(pnl)}
-            </strong>
-          </div>
-
-          <button
-            class="close-position"
-            data-close="${position.symbol}">
-            Sell
-          </button>
-
-        </div>
-      `;
-    }).join("");
-
-  list.querySelectorAll("[data-close]")
-    .forEach(button => {
-
-      button.addEventListener("click", () => {
-
-        const symbol =
-          button.dataset.close;
-
-        const position =
-          getPosition(symbol);
-
-        if (!position) return;
-
-        tradeSide = "sell";
-        selectedSymbol = symbol;
+        const price =
+          getPrice(
+            position.symbol
+          );
 
         const value =
           position.quantity *
-          getPrice(symbol);
+          price;
 
-        document.getElementById(
-          "tradeAmount"
-        ).value =
-          value.toFixed(2);
+        const profit =
+          value -
+          position.cost;
 
-        updateEverything();
-      });
+        return `
+          <div class="position-card">
+
+            <div class="position-coin">
+              <span class="coin-icon">
+                ${coin.icon}
+              </span>
+
+              <div>
+                <strong>
+                  ${coin.name}
+                </strong>
+
+                <small>
+                  ${coin.symbol}
+                </small>
+              </div>
+            </div>
+
+            <div class="metric">
+              <span>Entry</span>
+              <strong>
+                ${formatPrice(
+                  position.entryPrice
+                )}
+              </strong>
+            </div>
+
+            <div class="metric">
+              <span>Value</span>
+              <strong>
+                ${formatMoney(value)}
+              </strong>
+            </div>
+
+            <div class="metric">
+              <span>P&L</span>
+              <strong class="${
+                profit >= 0
+                  ? "positive"
+                  : "negative"
+              }">
+                ${profit >= 0 ? "+" : ""}
+                ${formatMoney(profit)}
+              </strong>
+            </div>
+
+            <button
+              class="close-position"
+              data-sell-symbol="${position.symbol}">
+              Sell
+            </button>
+
+          </div>
+        `;
+      }
+    ).join("");
+
+  list
+    .querySelectorAll(
+      "[data-sell-symbol]"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          const symbol =
+            button.dataset.sellSymbol;
+
+          const position =
+            getPosition(symbol);
+
+          if (!position) return;
+
+          selectedSymbol =
+            symbol;
+
+          tradeSide =
+            "SELL";
+
+          const value =
+            position.quantity *
+            getPrice(symbol);
+
+          const amount =
+            document.getElementById(
+              "tradeAmount"
+            );
+
+          if (amount) {
+            amount.value =
+              value.toFixed(2);
+          }
+
+          updateUI();
+        }
+      );
     });
 }
 
@@ -737,21 +887,14 @@ function formatMoney(value) {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     }
-  ).format(value);
+  ).format(
+    Number(value) || 0
+  );
 }
 
 function formatQuantity(value) {
 
-  if (value >= 1000) {
-    return value.toLocaleString(
-      "en-US",
-      {
-        maximumFractionDigits: 2
-      }
-    );
-  }
-
-  return value.toLocaleString(
+  return Number(value).toLocaleString(
     "en-US",
     {
       maximumFractionDigits: 8
@@ -760,17 +903,16 @@ function formatQuantity(value) {
 }
 
 document.addEventListener(
-  "kereosPricesUpdated",
+  "kereos:prices",
   () => {
 
-    updateEverything();
+    updateUI();
 
     if (
-      typeof refreshChart === "function" &&
-      currentChartSymbol === selectedSymbol
+      typeof refreshChart ===
+      "function"
     ) {
       refreshChart();
     }
-
   }
 );
