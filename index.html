@@ -1,390 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta
-    name="description"
-    content="Kereos demo meme coin trading terminal"
-  >
-
-  <title>Kereos — Demo Trading</title>
-
-  <link
-    rel="stylesheet"
-    href="style.css"
-  >
-
-  <script
-    src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js">
-  </script>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kereos — Meme Coin Terminal</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-
-<header class="topbar">
-
-  <a
-    href="index.html"
-    class="brand"
-  >
-    <span class="brand-logo">K</span>
-    <span>KEREOS</span>
-  </a>
-
-  <nav
-    class="nav"
-    id="mainNav"
-  >
-
-    <a
-      href="index.html"
-      class="active"
-      data-nav
-    >
-      Trade
-    </a>
-
-    <a
-      href="markets.html"
-      data-nav
-    >
-      Markets
-    </a>
-
-    <a
-      href="portfolio.html"
-      data-nav
-    >
-      Portfolio
-    </a>
-
-    <a
-      href="challenges.html"
-      data-nav
-    >
-      Challenges
-    </a>
-
-  </nav>
-
-  <div class="account-balance">
-
-    <span>DEMO BALANCE</span>
-
-    <strong id="headerBalance">
-      $10,000.00
-    </strong>
-
-  </div>
-
-  <button
-    class="mobile-menu"
-    id="mobileMenu"
-  >
-    ☰
-  </button>
-
-</header>
-
-<main class="container">
-
-  <section class="hero">
-
-    <div>
-
-      <div class="eyebrow">
-        KEREOS TERMINAL
-      </div>
-
-      <h1>
-        Trade the chaos.
-      </h1>
-
-      <p>
-        Practice meme coin trading with virtual funds.
-      </p>
-
-    </div>
-
-    <div class="live-status">
-      <span></span>
-      DEMO MARKET LIVE
-    </div>
-
-  </section>
-
-  <section
-    class="market-strip"
-    id="marketStrip"
-  ></section>
-
-  <section class="trade-layout">
-
-    <div class="panel chart-panel">
-
-      <div class="chart-header">
-
-        <div class="selected-coin">
-
-          <span
-            class="coin-icon coin-large"
-            id="selectedCoinIcon"
-          >
-            🐸
-          </span>
-
-          <div>
-
-            <div class="coin-title">
-
-              <h2 id="selectedCoinName">
-                Pepe
-              </h2>
-
-              <span id="selectedCoinSymbol">
-                PEPE
-              </span>
-
-            </div>
-
-            <div
-              class="selected-price"
-              id="selectedPrice"
-            >
-              $0.0000124
-            </div>
-
-            <div
-              id="selectedChange"
-              class="positive"
-            >
-              +0.00%
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="timeframes">
-
-          <button class="active">
-            1m
-          </button>
-
-          <button>
-            5m
-          </button>
-
-          <button>
-            15m
-          </button>
-
-          <button>
-            1h
-          </button>
-
-        </div>
-
-      </div>
-
-      <div
-        id="chart"
-        class="chart"
-      ></div>
-
-      <div class="chart-footer">
-
-        <span>🟢 BUY</span>
-        <span>🔴 SELL</span>
-        <span>Demo data</span>
-
-      </div>
-
-    </div>
-
-    <aside class="panel order-panel">
-
-      <div class="trade-tabs">
-
-        <button
-          class="trade-tab active"
-          data-side="BUY"
-        >
-          Buy
-        </button>
-
-        <button
-          class="trade-tab"
-          data-side="SELL"
-        >
-          Sell
-        </button>
-
-      </div>
-
-      <div class="balance-box">
-
-        <div>
-          <span>Available</span>
-
-          <strong id="availableBalance">
-            $10,000.00
-          </strong>
-        </div>
-
-        <div>
-          <span>Price</span>
-
-          <strong id="tradePrice">
-            $0.0000124
-          </strong>
-        </div>
-
-      </div>
-
-      <label>
-        Amount in USD
-      </label>
-
-      <div class="amount-input">
-
-        <span>$</span>
-
-        <input
-          id="tradeAmount"
-          type="number"
-          min="1"
-          value="100"
-        >
-
-      </div>
-
-      <div class="quick-buttons">
-
-        <button data-amount="25">
-          $25
-        </button>
-
-        <button data-amount="50">
-          $50
-        </button>
-
-        <button data-amount="100">
-          $100
-        </button>
-
-        <button data-amount="500">
-          $500
-        </button>
-
-      </div>
-
-      <button
-        id="tradeButton"
-        class="trade-button buy-button"
-      >
-        Buy PEPE
-      </button>
-
-      <div class="position-preview">
-
-        <div class="preview-heading">
-
-          <strong>
-            Your Position
-          </strong>
-
-          <span id="positionStatus">
-            No position
-          </span>
-
-        </div>
-
-        <div class="preview-row">
-          <span>Quantity</span>
-          <strong id="positionQuantity">
-            0
-          </strong>
-        </div>
-
-        <div class="preview-row">
-          <span>Entry</span>
-          <strong id="positionEntry">
-            $0.00000000
-          </strong>
-        </div>
-
-        <div class="preview-row">
-          <span>Value</span>
-          <strong id="positionValue">
-            $0.00
-          </strong>
-        </div>
-
-        <div class="preview-row">
-          <span>P&L</span>
-          <strong id="positionPnl">
-            $0.00
-          </strong>
-        </div>
-
-      </div>
-
-    </aside>
-
-  </section>
-
-  <section class="panel positions-section">
-
-    <div class="section-heading">
-
-      <div>
-        <div class="eyebrow">
-          TRADING ACCOUNT
-        </div>
-
-        <h2>
-          Open Positions
-        </h2>
-      </div>
-
-      <a
-        href="portfolio.html"
-        class="text-link"
-      >
-        Full portfolio →
+  <div class="app-shell">
+
+    <header class="topbar">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">K</span>
+        <span>KEREOS</span>
       </a>
 
-    </div>
+      <nav>
+        <a class="active" href="index.html">Terminal</a>
+        <a href="markets.html">Markets</a>
+        <a href="portfolio.html">Portfolio</a>
+        <a href="challenges.html">Challenges</a>
+      </nav>
 
-    <div
-      id="positionsList"
-      class="positions-list"
-    ></div>
+      <div class="balance-box">
+        <span>Demo Balance</span>
+        <strong id="navBalance">$10,000.00</strong>
+      </div>
+    </header>
 
-  </section>
+    <main class="container">
 
-</main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">DEMO TRADING TERMINAL</p>
+          <h1>Trade the chaos.</h1>
+          <p class="hero-text">
+            Track simulated meme-coin markets, build positions and test strategies
+            without using real money.
+          </p>
+        </div>
 
-<div
-  id="toastContainer"
-  class="toast-container"
-></div>
+        <div class="live-pill">
+          <span></span> LIVE SIMULATION
+        </div>
+      </section>
 
-<script src="storage.js"></script>
-<script src="prices.js"></script>
-<script src="animation.js"></script>
-<script src="chart.js"></script>
-<script src="app.js"></script>
-<script src="script.js"></script>
+      <section class="stats-grid">
+        <div class="stat-card">
+          <span>Portfolio Value</span>
+          <strong id="portfolioValue">$10,000.00</strong>
+        </div>
 
+        <div class="stat-card">
+          <span>Today's P&L</span>
+          <strong id="dailyPnl">$0.00</strong>
+        </div>
+
+        <div class="stat-card">
+          <span>Open Positions</span>
+          <strong id="positionCount">0</strong>
+        </div>
+
+        <div class="stat-card">
+          <span>Market Status</span>
+          <strong class="positive">OPEN</strong>
+        </div>
+      </section>
+
+      <section class="section-heading">
+        <div>
+          <p class="eyebrow">MARKET WATCH</p>
+          <h2>Trending tokens</h2>
+        </div>
+
+        <a class="text-link" href="markets.html">View all →</a>
+      </section>
+
+      <section id="tokenGrid" class="token-grid"></section>
+
+    </main>
+  </div>
+
+  <script src="storage.js"></script>
+  <script src="price.js"></script>
+  <script src="animation.js"></script>
+  <script src="app.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
