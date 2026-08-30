@@ -10,8 +10,8 @@
 <body>
 
 <header class="topbar">
-  <a href="index.html" class="logo">
-    <span class="logo-mark">K</span>
+  <a href="index.html" class="brand">
+    <span class="brand-icon">K</span>
     <span>KEREOS</span>
   </a>
 
@@ -19,131 +19,120 @@
     <a href="index.html">Terminal</a>
     <a href="markets.html">Markets</a>
     <a href="portfolio.html">Portfolio</a>
-    <a class="active" href="challenges.html">Challenges</a>
+    <a href="challenges.html" class="active">Challenges</a>
   </nav>
 
-  <div class="balance-box">
-    <span>Demo Balance</span>
+  <div class="demo-balance">
+    <small>DEMO BALANCE</small>
     <strong id="navBalance">$10,000.00</strong>
   </div>
 </header>
 
-<main class="container">
+
+<main class="container page">
 
   <section class="challenge-hero">
+
     <div>
-      <p class="eyebrow">KEREOS CHALLENGE LAB</p>
-      <h1>Can you beat the market?</h1>
+      <small>CHALLENGE LAB</small>
+      <h1>Test your strategy.</h1>
       <p>
-        Start with a fixed demo balance and try to reach the target.
-        No real money is involved.
+        Complete simulated trading challenges and see how your
+        strategy performs.
       </p>
     </div>
 
-    <div class="challenge-badge">
-      <span>DEMO</span>
-      <strong>100 → 200</strong>
+    <div class="challenge-number">
+      <small>START</small>
+      <strong>$100</strong>
+      <span>→ $200</span>
     </div>
+
   </section>
+
 
   <section class="challenge-grid">
 
     <article class="challenge-card featured">
+
       <div class="challenge-top">
-        <span class="challenge-status">AVAILABLE</span>
         <span>LEVEL 01</span>
+        <b>AVAILABLE</b>
       </div>
 
       <h2>Double Up</h2>
 
       <p>
-        Start with $100 in simulated funds and try to reach $200.
+        Start with $100 in simulated funds and attempt to reach $200.
       </p>
 
-      <div class="challenge-numbers">
+      <div class="challenge-progress">
         <div>
-          <span>START</span>
-          <strong>$100</strong>
+          <span>PROGRESS</span>
+          <strong id="challengeProgress">$100 / $200</strong>
         </div>
 
-        <div>
-          <span>TARGET</span>
-          <strong>$200</strong>
+        <div class="progress-track">
+          <span id="progressBar"></span>
         </div>
       </div>
 
-      <button class="primary-btn challenge-start" data-start="100" data-target="200">
+      <button id="startChallenge" class="button primary">
         Start Challenge
       </button>
+
+      <button id="resetChallenge" class="button secondary hidden">
+        Reset Challenge
+      </button>
+
     </article>
 
+
     <article class="challenge-card">
+
       <div class="challenge-top">
-        <span class="challenge-status">LOCKED</span>
         <span>LEVEL 02</span>
+        <b>LOCKED</b>
       </div>
 
       <h2>Moonshot</h2>
 
       <p>
-        Build a simulated $500 portfolio and reach $1,000.
+        Turn a simulated $500 into $1,000.
       </p>
 
-      <div class="challenge-numbers">
-        <div>
-          <span>START</span>
-          <strong>$500</strong>
-        </div>
-
-        <div>
-          <span>TARGET</span>
-          <strong>$1K</strong>
-        </div>
+      <div class="locked-message">
+        Complete Level 01
       </div>
 
-      <button class="secondary-btn" disabled>
-        Complete Level 01
-      </button>
     </article>
 
+
     <article class="challenge-card">
+
       <div class="challenge-top">
-        <span class="challenge-status">LOCKED</span>
         <span>LEVEL 03</span>
+        <b>LOCKED</b>
       </div>
 
       <h2>Diamond Hands</h2>
 
       <p>
-        Reach a 50% simulated return while maintaining an open position.
+        Reach a 50% simulated return while maintaining a position.
       </p>
 
-      <div class="challenge-numbers">
-        <div>
-          <span>START</span>
-          <strong>$1K</strong>
-        </div>
-
-        <div>
-          <span>TARGET</span>
-          <strong>$1.5K</strong>
-        </div>
+      <div class="locked-message">
+        Complete Level 02
       </div>
 
-      <button class="secondary-btn" disabled>
-        Locked
-      </button>
     </article>
 
   </section>
 
 </main>
 
-<script src="storage.js"></script>
-<script src="price.js"></script>
-<script src="animation.js"></script>
+
 <script src="app.js"></script>
-<script src="script.js"></script>
 
 </body>
 </html>
