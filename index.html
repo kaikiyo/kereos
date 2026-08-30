@@ -2,1460 +2,952 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#070a12">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#070a12"
+  >
+
   <title>KEREOS — Meme Coin Paper Trading</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --bg: #070a12;
-      --panel: #0e1422;
-      --panel2: #111a2b;
-      --border: rgba(255,255,255,.09);
-      --text: #f5f7fb;
-      --muted: #8d98aa;
-      --green: #35e39a;
-      --red: #ff5f72;
-      --purple: #8b6cff;
-      --blue: #4da3ff;
-      --yellow: #ffc857;
-    }
-
-    body {
-      font-family: Inter, Arial, sans-serif;
-      background:
-        radial-gradient(circle at 20% 0%, rgba(139,108,255,.16), transparent 30%),
-        radial-gradient(circle at 90% 10%, rgba(77,163,255,.10), transparent 25%),
-        var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    button,
-    input {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    .app {
-      max-width: 1400px;
-      margin: auto;
-      padding: 22px;
-    }
-
-    /* HEADER */
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-      padding: 18px 20px;
-      background: rgba(14,20,34,.82);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      backdrop-filter: blur(18px);
-      position: sticky;
-      top: 12px;
-      z-index: 50;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 13px;
-    }
-
-    .logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 15px;
-      display: grid;
-      place-items: center;
-      font-size: 22px;
-      font-weight: 900;
-      background: linear-gradient(135deg, var(--purple), var(--blue));
-      box-shadow: 0 10px 35px rgba(139,108,255,.3);
-    }
-
-    .brand h1 {
-      font-size: 21px;
-      letter-spacing: 2px;
-    }
-
-    .brand small {
-      color: var(--muted);
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .live {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      color: var(--green);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .live-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 12px var(--green);
-    }
-
-    .wallet {
-      background: rgba(255,255,255,.05);
-      border: 1px solid var(--border);
-      padding: 9px 13px;
-      border-radius: 12px;
-      font-weight: 700;
-    }
-
-    /* NAV */
-    nav {
-      display: flex;
-      gap: 8px;
-      margin: 22px 0;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-
-    nav::-webkit-scrollbar {
-      display: none;
-    }
-
-    .nav-btn {
-      border: 1px solid var(--border);
-      color: var(--muted);
-      background: rgba(255,255,255,.03);
-      padding: 11px 17px;
-      border-radius: 12px;
-      white-space: nowrap;
-    }
-
-    .nav-btn.active,
-    .nav-btn:hover {
-      color: white;
-      background: rgba(139,108,255,.16);
-      border-color: rgba(139,108,255,.45);
-    }
-
-    /* HERO */
-    .hero {
-      padding: 32px 4px 25px;
-    }
-
-    .hero h2 {
-      font-size: clamp(32px, 5vw, 58px);
-      line-height: 1;
-      max-width: 800px;
-      letter-spacing: -2px;
-    }
-
-    .gradient {
-      background: linear-gradient(90deg, #fff, #a995ff, #66b8ff);
-      -webkit-background-clip: text;
-      color: transparent;
-    }
-
-    .hero p {
-      margin-top: 15px;
-      color: var(--muted);
-      max-width: 680px;
-      font-size: 16px;
-      line-height: 1.7;
-    }
-
-    /* CARDS */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-    }
-
-    .card {
-      background: linear-gradient(145deg, rgba(17,26,43,.95), rgba(10,15,27,.95));
-      border: 1px solid var(--border);
-      border-radius: 19px;
-      padding: 20px;
-      box-shadow: 0 15px 50px rgba(0,0,0,.16);
-    }
-
-    .stat-label {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 9px;
-    }
-
-    .stat-value {
-      font-size: 27px;
-      font-weight: 800;
-    }
-
-    .positive {
-      color: var(--green) !important;
-    }
-
-    .negative {
-      color: var(--red) !important;
-    }
-
-    /* SECTIONS */
-    .section {
-      margin-top: 25px;
-    }
-
-    .section-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 13px;
-    }
-
-    .section-head h3 {
-      font-size: 20px;
-    }
-
-    .search {
-      width: min(320px, 100%);
-      background: rgba(255,255,255,.05);
-      color: white;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 11px 13px;
-      outline: none;
-    }
-
-    .search:focus {
-      border-color: var(--purple);
-    }
-
-    /* MARKET TABLE */
-    .table-wrap {
-      overflow-x: auto;
-      background: rgba(14,20,34,.82);
-      border: 1px solid var(--border);
-      border-radius: 19px;
-    }
-
-    table {
-      width: 100%;
-      min-width: 760px;
-      border-collapse: collapse;
-    }
-
-    th,
-    td {
-      padding: 16px;
-      text-align: left;
-      border-bottom: 1px solid rgba(255,255,255,.055);
-    }
-
-    th {
-      color: var(--muted);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .7px;
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    .coin {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .coin-img {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      object-fit: cover;
-      background: #1a2234;
-    }
-
-    .coin-name {
-      font-weight: 800;
-    }
-
-    .coin-symbol {
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 3px;
-    }
-
-    .buy-btn,
-    .sell-btn {
-      border: none;
-      border-radius: 9px;
-      padding: 8px 12px;
-      font-weight: 800;
-    }
-
-    .buy-btn {
-      color: #04140e;
-      background: var(--green);
-    }
-
-    .sell-btn {
-      color: white;
-      background: var(--red);
-    }
-
-    .buy-btn:hover,
-    .sell-btn:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.08);
-    }
-
-    /* DASHBOARD */
-    .dashboard {
-      display: grid;
-      grid-template-columns: 1.5fr 1fr;
-      gap: 15px;
-    }
-
-    .position {
-      display: flex;
-      justify-content: space-between;
-      gap: 15px;
-      padding: 15px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .position:last-child {
-      border-bottom: none;
-    }
-
-    .empty {
-      color: var(--muted);
-      text-align: center;
-      padding: 30px;
-    }
-
-    /* CHALLENGE */
-    .challenge {
-      background:
-        radial-gradient(circle at 90% 20%, rgba(255,200,87,.15), transparent 30%),
-        linear-gradient(135deg, #161326, #0d1320);
-      border: 1px solid rgba(255,200,87,.18);
-    }
-
-    .challenge-title {
-      font-size: 26px;
-      font-weight: 900;
-      margin-bottom: 8px;
-    }
-
-    .challenge p {
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .progress {
-      height: 9px;
-      background: rgba(255,255,255,.07);
-      border-radius: 99px;
-      overflow: hidden;
-      margin: 18px 0;
-    }
-
-    .progress-bar {
-      height: 100%;
-      width: 50%;
-      background: linear-gradient(90deg, var(--yellow), #ff9d4d);
-      border-radius: inherit;
-      transition: width .3s;
-    }
-
-    .challenge-stats {
-      display: flex;
-      justify-content: space-between;
-      color: var(--muted);
-    }
-
-    /* MODAL */
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.7);
-      backdrop-filter: blur(8px);
-      display: none;
-      place-items: center;
-      z-index: 100;
-      padding: 20px;
-    }
-
-    .modal.show {
-      display: grid;
-    }
-
-    .modal-box {
-      width: min(450px, 100%);
-      background: #101827;
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 23px;
-    }
-
-    .modal-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .close {
-      background: transparent;
-      border: none;
-      color: var(--muted);
-      font-size: 25px;
-    }
-
-    .trade-price {
-      color: var(--muted);
-      margin-bottom: 15px;
-    }
-
-    .trade-input {
-      width: 100%;
-      padding: 13px;
-      border-radius: 11px;
-      background: rgba(255,255,255,.05);
-      color: white;
-      border: 1px solid var(--border);
-      outline: none;
-      margin-bottom: 12px;
-    }
-
-    .trade-action {
-      width: 100%;
-      padding: 13px;
-      border: none;
-      border-radius: 11px;
-      font-weight: 900;
-      background: var(--green);
-      color: #03140d;
-    }
-
-    /* TOAST */
-    .toast {
-      position: fixed;
-      bottom: 22px;
-      right: 22px;
-      background: #151f31;
-      border: 1px solid var(--border);
-      padding: 14px 17px;
-      border-radius: 13px;
-      box-shadow: 0 15px 40px rgba(0,0,0,.35);
-      transform: translateY(120px);
-      opacity: 0;
-      transition: .25s;
-      z-index: 200;
-      max-width: 340px;
-    }
-
-    .toast.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    /* FOOTER */
-    footer {
-      text-align: center;
-      padding: 45px 10px 25px;
-      color: var(--muted);
-    }
-
-    footer strong {
-      color: white;
-    }
-
-    .founder {
-      margin-top: 7px;
-      font-size: 15px;
-    }
-
-    .instagram {
-      display: inline-block;
-      margin-top: 12px;
-      color: #c6baff;
-      text-decoration: none;
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 1000px) {
-      .grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .dashboard {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 650px) {
-      .app {
-        padding: 12px;
-      }
-
-      header {
-        padding: 13px;
-        border-radius: 16px;
-        top: 5px;
-      }
-
-      .logo {
-        width: 40px;
-        height: 40px;
-      }
-
-      .brand h1 {
-        font-size: 17px;
-      }
-
-      .header-right .live {
-        display: none;
-      }
-
-      .wallet {
-        font-size: 12px;
-        padding: 8px;
-      }
-
-      .hero {
-        padding-top: 25px;
-      }
-
-      .hero h2 {
-        font-size: 38px;
-      }
-
-      .grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .card {
-        padding: 15px;
-      }
-
-      .stat-value {
-        font-size: 20px;
-      }
-
-      .section-head {
-        align-items: stretch;
-        flex-direction: column;
-      }
-
-      .search {
-        width: 100%;
-      }
-    }
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="app">
+  <div id="app">
 
-  <header>
-    <div class="brand">
-      <div class="logo">K</div>
-      <div>
-        <h1>KEREOS</h1>
-        <small>Paper Trading Terminal</small>
-      </div>
-    </div>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
 
-    <div class="header-right">
-      <div class="live">
-        <span class="live-dot"></span>
-        LIVE MARKET
-      </div>
-      <div class="wallet">
-        Balance: <span id="headerBalance">$10,000.00</span>
-      </div>
-    </div>
-  </header>
+      <div class="brand">
 
-  <nav>
-    <button class="nav-btn active" data-page="home">Dashboard</button>
-    <button class="nav-btn" data-page="markets">Markets</button>
-    <button class="nav-btn" data-page="portfolio">Portfolio</button>
-    <button class="nav-btn" data-page="challenge">Challenge</button>
-  </nav>
-
-  <main id="page">
-
-    <section class="hero">
-      <h2>
-        Trade the meme market.
-        <span class="gradient">Without risking real money.</span>
-      </h2>
-      <p>
-        KEREOS is a simulated crypto trading terminal where you can practice
-        buying and selling meme coins using virtual money and live market data.
-      </p>
-    </section>
-
-    <section class="grid">
-      <div class="card">
-        <div class="stat-label">Portfolio Value</div>
-        <div class="stat-value" id="portfolioValue">$10,000.00</div>
-      </div>
-
-      <div class="card">
-        <div class="stat-label">Available Cash</div>
-        <div class="stat-value" id="cashValue">$10,000.00</div>
-      </div>
-
-      <div class="card">
-        <div class="stat-label">Total P/L</div>
-        <div class="stat-value" id="totalPnL">$0.00</div>
-      </div>
-
-      <div class="card">
-        <div class="stat-label">Positions</div>
-        <div class="stat-value" id="positionCount">0</div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <h3>🔥 Meme Markets</h3>
-        <input
-          id="search"
-          class="search"
-          placeholder="Search coins..."
-          type="search"
-        >
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Coin</th>
-              <th>Price</th>
-              <th>24h</th>
-              <th>Market Cap</th>
-              <th>Volume</th>
-              <th>Trade</th>
-            </tr>
-          </thead>
-
-          <tbody id="marketTable">
-            <tr>
-              <td colspan="6" class="empty">Loading market data...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="section dashboard">
-
-      <div class="card">
-        <div class="section-head">
-          <h3>💼 Your Positions</h3>
-          <span id="positionStatus" class="stat-label">No positions</span>
+        <div class="brand-logo">
+          K
         </div>
 
-        <div id="positions">
-          <div class="empty">
-            You don't have any positions yet.<br>
-            Buy a coin above to start paper trading.
+        <div>
+          <div class="brand-name">
+            KEREOS
+          </div>
+
+          <div class="brand-subtitle">
+            Trading Terminal
           </div>
         </div>
+
       </div>
 
-      <div class="card challenge">
-        <div class="challenge-title">🏆 Challenge Mode</div>
+      <nav class="navigation">
 
-        <p>
-          Start with $100 of virtual money and try to reach $200.
-          Your progress is based on simulated trades using market prices.
-        </p>
+        <button
+          class="nav-item active"
+          data-page="dashboard"
+        >
+          <span>⌂</span>
+          Dashboard
+        </button>
 
-        <div class="progress">
-          <div id="challengeProgress" class="progress-bar"></div>
+        <button
+          class="nav-item"
+          data-page="markets"
+        >
+          <span>◈</span>
+          Markets
+        </button>
+
+        <button
+          class="nav-item"
+          data-page="portfolio"
+        >
+          <span>▣</span>
+          Portfolio
+        </button>
+
+        <button
+          class="nav-item"
+          data-page="challenge"
+        >
+          <span>♛</span>
+          Challenge
+        </button>
+
+      </nav>
+
+      <div class="sidebar-bottom">
+
+        <div class="market-status">
+          <span id="statusDot" class="status-dot"></span>
+
+          <div>
+            <strong id="statusText">
+              Connecting
+            </strong>
+
+            <small id="lastUpdated">
+              Waiting for data
+            </small>
+          </div>
         </div>
 
-        <div class="challenge-stats">
-          <span>Start: $100</span>
-          <strong id="challengeValue">$100</strong>
-          <span>Goal: $200</span>
-        </div>
+        <a
+          class="instagram-link"
+          href="https://www.instagram.com/hanzal_nabi/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Instagram ↗
+        </a>
+
       </div>
 
-    </section>
-
-  </main>
-
-  <footer>
-    <strong>KEREOS</strong> — Crypto paper trading simulator
-    <div class="founder">
-      Founded by <strong>Hanzal Nabi</strong>
-    </div>
-
-    <a
-      class="instagram"
-      href="https://www.instagram.com/hanzal_nabi/"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      Instagram ↗
-    </a>
-  </footer>
-
-</div>
-
-<!-- TRADE MODAL -->
-
-<div class="modal" id="tradeModal">
-  <div class="modal-box">
-
-    <div class="modal-head">
-      <h3 id="tradeTitle">Trade</h3>
-      <button class="close" onclick="closeTrade()">×</button>
-    </div>
-
-    <div class="trade-price">
-      Current price:
-      <strong id="tradePrice">$0</strong>
-    </div>
-
-    <input
-      id="tradeAmount"
-      class="trade-input"
-      type="number"
-      min="1"
-      step="0.01"
-      placeholder="Amount in USD"
-    >
-
-    <button
-      id="tradeAction"
-      class="trade-action"
-      onclick="executeTrade()"
-    >
-      BUY
-    </button>
-
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-/* =========================================================
-   KEREOS
-   Paper Trading Engine
-   ========================================================= */
-
-const API_URL =
-  "https://api.coingecko.com/api/v3/coins/markets" +
-  "?vs_currency=usd" +
-  "&category=meme-token" +
-  "&order=market_cap_desc" +
-  "&per_page=50" +
-  "&page=1" +
-  "&sparkline=false";
-
-const FALLBACK_COINS = [
-  {
-    id: "dogecoin",
-    symbol: "doge",
-    name: "Dogecoin",
-    image: "https://assets.coingecko.com/coins/images/5/large/dogecoin.png",
-    current_price: 0.22,
-    price_change_percentage_24h: 2.4,
-    market_cap: 32000000000,
-    total_volume: 1200000000
-  },
-  {
-    id: "shiba-inu",
-    symbol: "shib",
-    name: "Shiba Inu",
-    image: "https://assets.coingecko.com/coins/images/11939/large/shiba.png",
-    current_price: 0.000013,
-    price_change_percentage_24h: -1.2,
-    market_cap: 8000000000,
-    total_volume: 300000000
-  },
-  {
-    id: "pepe",
-    symbol: "pepe",
-    name: "Pepe",
-    image: "https://assets.coingecko.com/coins/images/29850/large/pepe-token.jpeg",
-    current_price: 0.00001,
-    price_change_percentage_24h: 5.8,
-    market_cap: 4200000000,
-    total_volume: 700000000
-  }
-];
-
-let coins = [];
-let positions = {};
-let cash = 10000;
-let selectedCoin = null;
-let selectedSide = "buy";
-
-const saved = localStorage.getItem("kereosState");
-
-if (saved) {
-  try {
-    const state = JSON.parse(saved);
-
-    cash = Number(state.cash ?? 10000);
-    positions = state.positions ?? {};
-
-  } catch {
-    cash = 10000;
-    positions = {};
-  }
-}
+    </aside>
 
-function saveState() {
-  localStorage.setItem(
-    "kereosState",
-    JSON.stringify({
-      cash,
-      positions
-    })
-  );
-}
 
-function money(value) {
-  if (!Number.isFinite(value)) return "$0.00";
+    <!-- MOBILE HEADER -->
+    <header class="mobile-header">
 
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 2
-  }).format(value);
-}
+      <div class="mobile-brand">
+        <div class="brand-logo small-logo">
+          K
+        </div>
 
-function compact(value) {
-  if (!Number.isFinite(value)) return "$0";
+        <strong>KEREOS</strong>
+      </div>
 
-  if (value >= 1e9) {
-    return "$" + (value / 1e9).toFixed(2) + "B";
-  }
+      <div class="mobile-balance">
+        <span>Balance</span>
+        <strong id="mobileBalance">
+          $10,000.00
+        </strong>
+      </div>
 
-  if (value >= 1e6) {
-    return "$" + (value / 1e6).toFixed(2) + "M";
-  }
+    </header>
 
-  if (value >= 1e3) {
-    return "$" + (value / 1e3).toFixed(2) + "K";
-  }
 
-  return money(value);
-}
+    <!-- MAIN -->
+    <main class="main-content">
 
-function price(value) {
-  if (!Number.isFinite(value)) return "$0";
+      <!-- TOP BAR -->
+      <div class="topbar">
 
-  if (value < 0.000001) {
-    return "$" + value.toFixed(10);
-  }
+        <div>
+          <div class="breadcrumb">
+            KEREOS / <span id="pageName">Dashboard</span>
+          </div>
 
-  if (value < 0.001) {
-    return "$" + value.toFixed(8);
-  }
+          <h1 id="pageTitle">
+            Dashboard
+          </h1>
+        </div>
 
-  if (value < 1) {
-    return "$" + value.toFixed(6);
-  }
+        <div class="topbar-actions">
 
-  return "$" + value.toLocaleString("en-US", {
-    maximumFractionDigits: 4
-  });
-}
+          <div class="live-indicator">
 
-function showToast(message) {
-  const toast = document.getElementById("toast");
+            <span class="status-dot"></span>
 
-  toast.textContent = message;
-  toast.classList.add("show");
+            <span>
+              MARKET DATA
+            </span>
 
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, 2800);
-}
+          </div>
 
-/* =========================================================
-   LOAD LIVE MARKET DATA
-   ========================================================= */
+          <div class="top-balance">
 
-async function loadMarkets() {
+            <small>
+              Virtual Balance
+            </small>
 
-  try {
+            <strong id="topBalance">
+              $10,000.00
+            </strong>
 
-    const response = await fetch(API_URL, {
-      headers: {
-        "Accept": "application/json"
-      }
-    });
+          </div>
 
-    if (!response.ok) {
-      throw new Error("Market API unavailable");
-    }
+        </div>
 
-    const data = await response.json();
+      </div>
 
-    if (!Array.isArray(data) || data.length === 0) {
-      throw new Error("No market data");
-    }
 
-    coins = data;
+      <!-- DASHBOARD -->
+      <section
+        id="dashboardPage"
+        class="page active-page"
+      >
 
-    renderMarkets();
+        <div class="hero-section">
 
-    showToast("Live market data updated");
+          <div>
 
-  } catch (error) {
+            <span class="eyebrow">
+              PAPER TRADING PLATFORM
+            </span>
 
-    console.warn("Live API unavailable:", error);
+            <h2>
+              Trade the meme market.
+              <span class="gradient-text">
+                Risk nothing.
+              </span>
+            </h2>
 
-    if (coins.length === 0) {
-      coins = FALLBACK_COINS;
-      renderMarkets();
-    }
+            <p>
+              Practice trading meme coins using virtual money
+              and market data without risking real funds.
+            </p>
 
-    showToast("Live data unavailable — demo prices active");
-  }
+          </div>
 
-  updatePortfolio();
-}
+          <div class="hero-badge">
 
-/* =========================================================
-   MARKET TABLE
-   ========================================================= */
+            <span class="pulse"></span>
 
-function renderMarkets() {
+            SIMULATION MODE
 
-  const table = document.getElementById("marketTable");
-  const query = document
-    .getElementById("search")
-    .value
-    .trim()
-    .toLowerCase();
+          </div>
 
-  const filtered = coins.filter(coin => {
+        </div>
 
-    return (
-      coin.name?.toLowerCase().includes(query) ||
-      coin.symbol?.toLowerCase().includes(query)
-    );
 
-  }).slice(0, 25);
+        <!-- STAT CARDS -->
+        <div class="stats-grid">
 
-  if (filtered.length === 0) {
+          <div class="stat-card">
 
-    table.innerHTML = `
-      <tr>
-        <td colspan="6" class="empty">
-          No coins found.
-        </td>
-      </tr>
-    `;
+            <div class="stat-top">
+              <span>Portfolio Value</span>
+              <span class="stat-icon">◈</span>
+            </div>
 
-    return;
-  }
+            <strong id="dashboardPortfolio">
+              $10,000.00
+            </strong>
 
-  table.innerHTML = filtered.map(coin => {
+            <small>
+              Total account value
+            </small>
 
-    const change =
-      Number(coin.price_change_percentage_24h ?? 0);
+          </div>
 
-    return `
-      <tr>
 
-        <td>
-          <div class="coin">
+          <div class="stat-card">
 
-            <img
-              class="coin-img"
-              src="${coin.image || ""}"
-              alt="${coin.name}"
-              onerror="this.style.visibility='hidden'"
+            <div class="stat-top">
+              <span>Available Cash</span>
+              <span class="stat-icon">◆</span>
+            </div>
+
+            <strong id="dashboardCash">
+              $10,000.00
+            </strong>
+
+            <small>
+              Ready to trade
+            </small>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-top">
+              <span>Total P/L</span>
+              <span class="stat-icon">↗</span>
+            </div>
+
+            <strong
+              id="dashboardPnL"
+              class="neutral"
             >
+              $0.00
+            </strong>
 
-            <div>
-              <div class="coin-name">
-                ${escapeHTML(coin.name)}
+            <small>
+              Unrealized + realized
+            </small>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-top">
+              <span>Open Positions</span>
+              <span class="stat-icon">▣</span>
+            </div>
+
+            <strong id="dashboardPositions">
+              0
+            </strong>
+
+            <small>
+              Active positions
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <!-- DASHBOARD LOWER -->
+        <div class="dashboard-grid">
+
+          <div class="panel">
+
+            <div class="panel-header">
+
+              <div>
+                <h3>
+                  🔥 Trending Meme Coins
+                </h3>
+
+                <p>
+                  Current market overview
+                </p>
               </div>
 
-              <div class="coin-symbol">
-                ${escapeHTML(
-                  String(coin.symbol || "").toUpperCase()
-                )}
+              <button
+                class="text-button"
+                data-page-jump="markets"
+              >
+                View all →
+              </button>
+
+            </div>
+
+            <div id="dashboardMarkets" class="mini-markets">
+
+              <div class="loading-box">
+                Loading markets...
               </div>
+
             </div>
 
           </div>
-        </td>
 
-        <td>
-          <strong>${price(Number(coin.current_price))}</strong>
-        </td>
 
-        <td class="${change >= 0 ? "positive" : "negative"}">
-          ${change >= 0 ? "+" : ""}
-          ${change.toFixed(2)}%
-        </td>
+          <div class="panel">
 
-        <td>${compact(Number(coin.market_cap))}</td>
+            <div class="panel-header">
 
-        <td>${compact(Number(coin.total_volume))}</td>
+              <div>
+                <h3>
+                  ⚡ Quick Trade
+                </h3>
 
-        <td>
+                <p>
+                  Start a paper trade
+                </p>
+
+              </div>
+
+            </div>
+
+            <div id="quickTradeList">
+
+              <div class="loading-box">
+                Loading...
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- ACTIVITY -->
+        <div class="panel">
+
+          <div class="panel-header">
+
+            <div>
+              <h3>
+                Recent Activity
+              </h3>
+
+              <p>
+                Your latest simulated trades
+              </p>
+            </div>
+
+            <button
+              class="text-button"
+              data-page-jump="portfolio"
+            >
+              Portfolio →
+            </button>
+
+          </div>
+
+          <div id="recentActivity">
+            <div class="empty-state">
+              No trades yet.
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- MARKETS -->
+      <section
+        id="marketsPage"
+        class="page"
+      >
+
+        <div class="page-intro">
+
+          <div>
+
+            <span class="eyebrow">
+              MARKET TERMINAL
+            </span>
+
+            <h2>
+              Meme Coin Markets
+            </h2>
+
+            <p>
+              Track the market and open simulated positions.
+            </p>
+
+          </div>
+
           <button
-            class="buy-btn"
-            onclick="openTrade('${coin.id}', 'buy')"
+            id="refreshButton"
+            class="secondary-button"
           >
-            BUY
+            ↻ Refresh
           </button>
-        </td>
 
-      </tr>
-    `;
+        </div>
 
-  }).join("");
-}
 
-function escapeHTML(value) {
+        <div class="market-toolbar">
 
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
+          <div class="search-wrapper">
 
-document
-  .getElementById("search")
-  .addEventListener("input", renderMarkets);
+            <span>⌕</span>
 
-/* =========================================================
-   TRADING
-   ========================================================= */
+            <input
+              id="marketSearch"
+              type="search"
+              placeholder="Search meme coins..."
+            >
 
-function openTrade(id, side) {
+          </div>
 
-  const coin = coins.find(c => c.id === id);
+          <div class="toolbar-label">
+            <span id="coinCount">
+              0
+            </span>
+            markets
+          </div>
 
-  if (!coin) {
-    showToast("Coin unavailable");
-    return;
-  }
+        </div>
 
-  selectedCoin = coin;
-  selectedSide = side;
 
-  document.getElementById("tradeTitle").textContent =
-    `${side.toUpperCase()} ${coin.name}`;
+        <div class="panel market-panel">
 
-  document.getElementById("tradePrice").textContent =
-    price(Number(coin.current_price));
+          <div class="table-scroll">
 
-  const button = document.getElementById("tradeAction");
+            <table class="market-table">
 
-  button.textContent =
-    side === "buy" ? "BUY" : "SELL";
+              <thead>
 
-  button.style.background =
-    side === "buy" ? "var(--green)" : "var(--red)";
+                <tr>
+                  <th>#</th>
+                  <th>Asset</th>
+                  <th>Price</th>
+                  <th>24h</th>
+                  <th>Market Cap</th>
+                  <th>Volume</th>
+                  <th>Action</th>
+                </tr>
 
-  button.style.color =
-    side === "buy" ? "#03140d" : "white";
+              </thead>
 
-  document.getElementById("tradeAmount").value = "";
+              <tbody id="marketTable">
 
-  document
-    .getElementById("tradeModal")
-    .classList.add("show");
-}
+                <tr>
+                  <td colspan="7">
+                    <div class="loading-box">
+                      Loading market data...
+                    </div>
+                  </td>
+                </tr>
 
-function closeTrade() {
+              </tbody>
 
-  document
-    .getElementById("tradeModal")
-    .classList.remove("show");
+            </table>
 
-  selectedCoin = null;
-}
+          </div>
 
-function executeTrade() {
+        </div>
 
-  if (!selectedCoin) return;
+      </section>
 
-  const amount = Number(
-    document.getElementById("tradeAmount").value
-  );
 
-  if (!Number.isFinite(amount) || amount <= 0) {
-    showToast("Enter a valid amount");
-    return;
-  }
+      <!-- PORTFOLIO -->
+      <section
+        id="portfolioPage"
+        class="page"
+      >
 
-  const currentPrice =
-    Number(selectedCoin.current_price);
+        <div class="page-intro">
 
-  if (!Number.isFinite(currentPrice) || currentPrice <= 0) {
-    showToast("Price unavailable");
-    return;
-  }
+          <div>
 
-  if (selectedSide === "buy") {
+            <span class="eyebrow">
+              YOUR ACCOUNT
+            </span>
 
-    if (amount > cash) {
-      showToast("Not enough virtual cash");
-      return;
-    }
+            <h2>
+              Portfolio
+            </h2>
 
-    const quantity = amount / currentPrice;
+            <p>
+              Track your simulated holdings and performance.
+            </p>
 
-    if (!positions[selectedCoin.id]) {
+          </div>
 
-      positions[selectedCoin.id] = {
-        id: selectedCoin.id,
-        name: selectedCoin.name,
-        symbol: selectedCoin.symbol,
-        image: selectedCoin.image,
-        quantity: 0,
-        invested: 0
-      };
+          <div class="portfolio-total">
 
-    }
+            <small>
+              Total Value
+            </small>
 
-    positions[selectedCoin.id].quantity += quantity;
-    positions[selectedCoin.id].invested += amount;
+            <strong id="portfolioTotal">
+              $10,000.00
+            </strong>
 
-    cash -= amount;
+          </div>
 
-    showToast(
-      `Bought ${quantity.toFixed(4)} ${selectedCoin.symbol.toUpperCase()}`
-    );
+        </div>
 
-  } else {
 
-    const position = positions[selectedCoin.id];
+        <div class="portfolio-stats">
 
-    if (!position || position.quantity <= 0) {
-      showToast("You don't own this coin");
-      return;
-    }
+          <div class="panel small-stat">
 
-    const quantityToSell = amount / currentPrice;
+            <span>
+              Cash
+            </span>
 
-    if (quantityToSell > position.quantity) {
-      showToast("You don't own enough of this coin");
-      return;
-    }
+            <strong id="portfolioCash">
+              $10,000.00
+            </strong>
 
-    const averageCost =
-      position.invested / position.quantity;
+          </div>
 
-    const costRemoved =
-      averageCost * quantityToSell;
+          <div class="panel small-stat">
 
-    position.quantity -= quantityToSell;
-    position.invested -= costRemoved;
+            <span>
+              Holdings
+            </span>
 
-    cash += amount;
+            <strong id="portfolioHoldings">
+              $0.00
+            </strong>
 
-    if (position.quantity <= 0.0000000001) {
-      delete positions[selectedCoin.id];
-    }
+          </div>
 
-    showToast(
-      `Sold ${quantityToSell.toFixed(4)} ${selectedCoin.symbol.toUpperCase()}`
-    );
-  }
+          <div class="panel small-stat">
 
-  saveState();
-  closeTrade();
-  updatePortfolio();
-}
+            <span>
+              P/L
+            </span>
 
-/* =========================================================
-   PORTFOLIO
-   ========================================================= */
+            <strong id="portfolioPnL">
+              $0.00
+            </strong>
 
-function updatePortfolio() {
+          </div>
 
-  let holdingsValue = 0;
-  let investedTotal = 0;
-  let count = 0;
+        </div>
 
-  Object.values(positions).forEach(position => {
 
-    const coin =
-      coins.find(c => c.id === position.id);
+        <div class="panel">
 
-    if (!coin) return;
+          <div class="panel-header">
 
-    const current =
-      Number(coin.current_price);
+            <div>
+              <h3>
+                Your Positions
+              </h3>
 
-    const value =
-      position.quantity * current;
+              <p>
+                Current value updates with market prices.
+              </p>
+            </div>
 
-    holdingsValue += value;
-    investedTotal += position.invested;
+          </div>
 
-    count++;
-  });
+          <div id="positionsList">
 
-  const total =
-    cash + holdingsValue;
+            <div class="empty-state">
 
-  const pnl =
-    holdingsValue - investedTotal;
+              <div class="empty-icon">
+                ◈
+              </div>
 
-  document.getElementById("portfolioValue").textContent =
-    money(total);
+              <strong>
+                No open positions
+              </strong>
 
-  document.getElementById("cashValue").textContent =
-    money(cash);
+              <p>
+                Visit Markets and buy a coin using virtual funds.
+              </p>
 
-  const pnlElement =
-    document.getElementById("totalPnL");
+              <button
+                class="primary-button"
+                data-page-jump="markets"
+              >
+                Explore Markets
+              </button>
 
-  pnlElement.textContent =
-    (pnl >= 0 ? "+" : "") + money(pnl);
+            </div>
 
-  pnlElement.className =
-    "stat-value " +
-    (pnl > 0 ? "positive" : pnl < 0 ? "negative" : "");
+          </div>
 
-  document.getElementById("positionCount").textContent =
-    count;
+        </div>
 
-  document.getElementById("headerBalance").textContent =
-    money(total);
 
-  renderPositions();
+        <div class="panel">
 
-  updateChallenge(total);
-}
+          <div class="panel-header">
 
-function renderPositions() {
+            <div>
+              <h3>
+                Transaction History
+              </h3>
 
-  const container =
-    document.getElementById("positions");
+              <p>
+                Your simulated trading activity.
+              </p>
+            </div>
 
-  const entries =
-    Object.values(positions);
+          </div>
 
-  if (entries.length === 0) {
+          <div id="transactionHistory">
 
-    container.innerHTML = `
-      <div class="empty">
-        You don't have any positions yet.<br>
-        Buy a coin above to start paper trading.
-      </div>
-    `;
+            <div class="empty-state">
+              No transactions yet.
+            </div>
 
-    document.getElementById("positionStatus").textContent =
-      "No positions";
+          </div>
 
-    return;
-  }
+        </div>
 
-  document.getElementById("positionStatus").textContent =
-    `${entries.length} active`;
+      </section>
 
-  container.innerHTML = entries.map(position => {
 
-    const coin =
-      coins.find(c => c.id === position.id);
+      <!-- CHALLENGE -->
+      <section
+        id="challengePage"
+        class="page"
+      >
 
-    if (!coin) return "";
+        <div class="challenge-hero">
 
-    const current =
-      Number(coin.current_price);
+          <div>
 
-    const value =
-      position.quantity * current;
+            <span class="eyebrow">
+              CHALLENGE MODE
+            </span>
 
-    const pnl =
-      value - position.invested;
+            <h2>
+              Can you turn
+              <span class="gold-text">
+                $100 into $200?
+              </span>
+            </h2>
 
-    const pnlPercent =
-      position.invested > 0
-        ? (pnl / position.invested) * 100
-        : 0;
+            <p>
+              Start with a separate virtual $100 account
+              and try to double it.
+            </p>
 
-    return `
-      <div class="position">
+          </div>
 
-        <div class="coin">
+          <div class="challenge-icon">
+            ♛
+          </div>
+
+        </div>
+
+
+        <div class="challenge-grid">
+
+          <div class="panel challenge-card">
+
+            <div class="challenge-label">
+              CURRENT BALANCE
+            </div>
+
+            <div
+              id="challengeBalance"
+              class="challenge-balance"
+            >
+              $100.00
+            </div>
+
+            <div class="progress-track">
+
+              <div
+                id="challengeProgress"
+                class="progress-fill"
+              ></div>
+
+            </div>
+
+            <div class="progress-labels">
+
+              <span>
+                $100
+              </span>
+
+              <strong>
+                Goal: $200
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div class="panel">
+
+            <div class="panel-header">
+
+              <div>
+                <h3>
+                  Challenge Rules
+                </h3>
+              </div>
+
+            </div>
+
+            <div class="rules">
+
+              <div class="rule">
+                <span>01</span>
+                <p>
+                  Start with $100 virtual cash.
+                </p>
+              </div>
+
+              <div class="rule">
+                <span>02</span>
+                <p>
+                  Trade using simulated market orders.
+                </p>
+              </div>
+
+              <div class="rule">
+                <span>03</span>
+                <p>
+                  Reach $200 to complete the challenge.
+                </p>
+              </div>
+
+              <div class="rule">
+                <span>04</span>
+                <p>
+                  No real money is involved.
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="panel challenge-message">
+
+          <div class="challenge-message-icon">
+            ⚡
+          </div>
+
+          <div>
+
+            <strong id="challengeMessage">
+              Challenge ready.
+            </strong>
+
+            <p>
+              Your challenge account is separate from your main
+              $10,000 demo portfolio.
+            </p>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+
+  <!-- TRADE MODAL -->
+  <div
+    id="tradeModal"
+    class="modal"
+  >
+
+    <div class="modal-overlay"></div>
+
+    <div class="trade-modal">
+
+      <div class="modal-header">
+
+        <div class="modal-coin">
 
           <img
-            class="coin-img"
-            src="${position.image || ""}"
+            id="modalCoinImage"
+            src=""
             alt=""
-            onerror="this.style.visibility='hidden'"
           >
 
           <div>
-            <div class="coin-name">
-              ${escapeHTML(position.name)}
-            </div>
 
-            <div class="coin-symbol">
-              ${position.quantity.toFixed(4)}
-              ${escapeHTML(
-                String(position.symbol).toUpperCase()
-              )}
-            </div>
+            <strong id="modalCoinName">
+              Coin
+            </strong>
+
+            <span id="modalCoinSymbol">
+              TOKEN
+            </span>
+
           </div>
 
         </div>
 
-        <div style="text-align:right">
+        <button
+          id="closeModal"
+          class="close-button"
+        >
+          ×
+        </button>
 
-          <strong>
-            ${money(value)}
-          </strong>
+      </div>
 
-          <div class="${pnl >= 0 ? "positive" : "negative"}">
-            ${pnl >= 0 ? "+" : ""}
-            ${money(pnl)}
-            (${pnlPercent.toFixed(2)}%)
-          </div>
 
-          <button
-            class="sell-btn"
-            style="margin-top:7px"
-            onclick="openTrade('${position.id}', 'sell')"
-          >
-            SELL
-          </button>
+      <div class="trade-tabs">
 
+        <button
+          id="buyTab"
+          class="trade-tab active buy-tab"
+        >
+          BUY
+        </button>
+
+        <button
+          id="sellTab"
+          class="trade-tab sell-tab"
+        >
+          SELL
+        </button>
+
+      </div>
+
+
+      <div class="trade-price-row">
+
+        <span>
+          Current Price
+        </span>
+
+        <strong id="modalPrice">
+          $0.00
+        </strong>
+
+      </div>
+
+
+      <label class="trade-label">
+        Amount (USD)
+      </label>
+
+      <div class="amount-input">
+
+        <span>
+          $
+        </span>
+
+        <input
+          id="tradeAmount"
+          type="number"
+          min="0"
+          step="0.01"
+          placeholder="100.00"
+        >
+
+      </div>
+
+
+      <div class="trade-preview">
+
+        <div>
+          <span>Estimated tokens</span>
+          <strong id="estimatedTokens">0</strong>
+        </div>
+
+        <div>
+          <span>Available</span>
+          <strong id="availableAmount">$0</strong>
         </div>
 
       </div>
-    `;
 
-  }).join("");
-}
 
-/* =========================================================
-   CHALLENGE
-   ========================================================= */
+      <button
+        id="executeTrade"
+        class="trade-submit buy-submit"
+      >
+        Confirm Buy
+      </button>
 
-function updateChallenge(portfolio) {
+      <p class="modal-note">
+        Paper trade only. No real cryptocurrency is purchased.
+      </p>
 
-  /*
-    Challenge uses a separate virtual $100 starting balance.
-    For now we use the current portfolio ratio as a simple demo.
-  */
+    </div>
 
-  const challengeValue =
-    Math.max(0, 100 * (portfolio / 10000));
+  </div>
 
-  const progress =
-    Math.min(100, (challengeValue / 200) * 100);
 
-  document.getElementById("challengeValue").textContent =
-    money(challengeValue);
+  <!-- TOAST -->
+  <div
+    id="toast"
+    class="toast"
+  >
+    <span id="toastIcon">✓</span>
+    <span id="toastMessage">Done</span>
+  </div>
 
-  document.getElementById("challengeProgress").style.width =
-    progress + "%";
-}
 
-/* =========================================================
-   NAVIGATION
-   ========================================================= */
-
-document.querySelectorAll(".nav-btn").forEach(button => {
-
-  button.addEventListener("click", () => {
-
-    document
-      .querySelectorAll(".nav-btn")
-      .forEach(btn => btn.classList.remove("active"));
-
-    button.classList.add("active");
-
-    const page = button.dataset.page;
-
-    if (page === "markets") {
-
-      window.scrollTo({
-        top: document.querySelector(".section").offsetTop - 80,
-        behavior: "smooth"
-      });
-
-    } else if (page === "portfolio") {
-
-      window.scrollTo({
-        top: document.querySelector(".dashboard").offsetTop - 80,
-        behavior: "smooth"
-      });
-
-    } else if (page === "challenge") {
-
-      window.scrollTo({
-        top: document.querySelector(".challenge").offsetTop - 80,
-        behavior: "smooth"
-      });
-
-    } else {
-
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-
-    }
-
-  });
-
-});
-
-/* =========================================================
-   START
-   ========================================================= */
-
-loadMarkets();
-
-/*
-  Refresh market data every 60 seconds.
-*/
-setInterval(loadMarkets, 60000);
-
-/*
-  Recalculate portfolio every few seconds.
-*/
-setInterval(updatePortfolio, 5000);
-
-</script>
+  <script src="script.js"></script>
 
 </body>
 </html>
