@@ -1,233 +1,390 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Kereos - Meme coin demo trading simulator">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Kereos demo meme coin trading terminal"
+  >
+
   <title>Kereos — Demo Trading</title>
 
-  <link rel="stylesheet" href="style.css">
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
 
-  <!-- Chart library -->
-  <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+  <script
+    src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js">
+  </script>
+
 </head>
 
 <body>
 
-  <header class="topbar">
-    <a href="index.html" class="brand">
-      <span class="brand-logo">K</span>
-      <span>KEREOS</span>
+<header class="topbar">
+
+  <a
+    href="index.html"
+    class="brand"
+  >
+    <span class="brand-logo">K</span>
+    <span>KEREOS</span>
+  </a>
+
+  <nav
+    class="nav"
+    id="mainNav"
+  >
+
+    <a
+      href="index.html"
+      class="active"
+      data-nav
+    >
+      Trade
     </a>
 
-    <nav class="nav">
-      <a href="index.html" class="active">Trade</a>
-      <a href="markets.html">Markets</a>
-      <a href="portfolio.html">Portfolio</a>
-      <a href="challenges.html">Challenges</a>
-    </nav>
+    <a
+      href="markets.html"
+      data-nav
+    >
+      Markets
+    </a>
 
-    <div class="account">
-      <span class="demo-label">DEMO</span>
-      <strong id="headerBalance">$10,000.00</strong>
+    <a
+      href="portfolio.html"
+      data-nav
+    >
+      Portfolio
+    </a>
+
+    <a
+      href="challenges.html"
+      data-nav
+    >
+      Challenges
+    </a>
+
+  </nav>
+
+  <div class="account-balance">
+
+    <span>DEMO BALANCE</span>
+
+    <strong id="headerBalance">
+      $10,000.00
+    </strong>
+
+  </div>
+
+  <button
+    class="mobile-menu"
+    id="mobileMenu"
+  >
+    ☰
+  </button>
+
+</header>
+
+<main class="container">
+
+  <section class="hero">
+
+    <div>
+
+      <div class="eyebrow">
+        KEREOS TERMINAL
+      </div>
+
+      <h1>
+        Trade the chaos.
+      </h1>
+
+      <p>
+        Practice meme coin trading with virtual funds.
+      </p>
+
     </div>
 
-    <button class="mobile-menu" id="mobileMenu">☰</button>
-  </header>
+    <div class="live-status">
+      <span></span>
+      DEMO MARKET LIVE
+    </div>
 
-  <main class="container">
+  </section>
 
-    <section class="hero">
-      <div>
-        <p class="eyebrow">MEME COIN TERMINAL</p>
-        <h1>Trade the chaos.</h1>
-        <p class="hero-text">
-          Practice trading meme coins with a simulated balance and live-moving demo markets.
-        </p>
-      </div>
+  <section
+    class="market-strip"
+    id="marketStrip"
+  ></section>
 
-      <div class="market-status">
-        <span class="status-dot"></span>
-        Markets Live
-      </div>
-    </section>
+  <section class="trade-layout">
 
-    <section class="market-strip" id="marketStrip"></section>
+    <div class="panel chart-panel">
 
-    <section class="trading-layout">
+      <div class="chart-header">
 
-      <div class="chart-panel panel">
+        <div class="selected-coin">
 
-        <div class="panel-header">
-
-          <div class="coin-title">
-            <div class="coin-icon large" id="selectedCoinIcon">🐸</div>
-
-            <div>
-              <div class="coin-name-row">
-                <h2 id="selectedCoinName">PEPE</h2>
-                <span id="selectedCoinSymbol">PEPE</span>
-              </div>
-
-              <div class="live-price" id="selectedPrice">
-                $0.00001240
-              </div>
-
-              <div id="selectedChange" class="positive">
-                +0.00%
-              </div>
-            </div>
-          </div>
-
-          <div class="timeframes">
-            <button data-timeframe="1m" class="timeframe active">1m</button>
-            <button data-timeframe="5m" class="timeframe">5m</button>
-            <button data-timeframe="15m" class="timeframe">15m</button>
-            <button data-timeframe="1h" class="timeframe">1h</button>
-          </div>
-
-        </div>
-
-        <div id="chart" class="chart"></div>
-
-        <div class="chart-legend">
-          <span>🟢 BUY</span>
-          <span>🔴 SELL</span>
-          <span id="chartPositionText">No open position</span>
-        </div>
-
-      </div>
-
-      <aside class="trade-panel panel">
-
-        <div class="trade-tabs">
-          <button class="trade-tab active" data-side="buy">Buy</button>
-          <button class="trade-tab" data-side="sell">Sell</button>
-        </div>
-
-        <div class="trade-info">
-          <div>
-            <span>Available</span>
-            <strong id="availableBalance">$10,000.00</strong>
-          </div>
-
-          <div>
-            <span>Current price</span>
-            <strong id="tradePrice">$0.00001240</strong>
-          </div>
-        </div>
-
-        <label class="input-label">Amount (USD)</label>
-
-        <div class="amount-box">
-          <span>$</span>
-          <input
-            id="tradeAmount"
-            type="number"
-            min="1"
-            step="0.01"
-            value="100"
-            placeholder="100"
+          <span
+            class="coin-icon coin-large"
+            id="selectedCoinIcon"
           >
+            🐸
+          </span>
+
+          <div>
+
+            <div class="coin-title">
+
+              <h2 id="selectedCoinName">
+                Pepe
+              </h2>
+
+              <span id="selectedCoinSymbol">
+                PEPE
+              </span>
+
+            </div>
+
+            <div
+              class="selected-price"
+              id="selectedPrice"
+            >
+              $0.0000124
+            </div>
+
+            <div
+              id="selectedChange"
+              class="positive"
+            >
+              +0.00%
+            </div>
+
+          </div>
+
         </div>
 
-        <div class="quick-amounts">
-          <button data-amount="25">$25</button>
-          <button data-amount="50">$50</button>
-          <button data-amount="100">$100</button>
-          <button data-amount="500">$500</button>
+        <div class="timeframes">
+
+          <button class="active">
+            1m
+          </button>
+
+          <button>
+            5m
+          </button>
+
+          <button>
+            15m
+          </button>
+
+          <button>
+            1h
+          </button>
+
         </div>
 
-        <button id="tradeButton" class="trade-button buy-button">
-          Buy PEPE
+      </div>
+
+      <div
+        id="chart"
+        class="chart"
+      ></div>
+
+      <div class="chart-footer">
+
+        <span>🟢 BUY</span>
+        <span>🔴 SELL</span>
+        <span>Demo data</span>
+
+      </div>
+
+    </div>
+
+    <aside class="panel order-panel">
+
+      <div class="trade-tabs">
+
+        <button
+          class="trade-tab active"
+          data-side="BUY"
+        >
+          Buy
         </button>
 
-        <div class="position-preview">
+        <button
+          class="trade-tab"
+          data-side="SELL"
+        >
+          Sell
+        </button>
 
-          <div class="preview-title">
-            <span>Your Position</span>
-            <span id="positionStatus">None</span>
-          </div>
+      </div>
 
-          <div class="preview-row">
-            <span>Quantity</span>
-            <strong id="positionQuantity">0</strong>
-          </div>
+      <div class="balance-box">
 
-          <div class="preview-row">
-            <span>Entry price</span>
-            <strong id="positionEntry">$0.00000000</strong>
-          </div>
-
-          <div class="preview-row">
-            <span>Current value</span>
-            <strong id="positionValue">$0.00</strong>
-          </div>
-
-          <div class="preview-row pnl-row">
-            <span>P&L</span>
-            <strong id="positionPnl">$0.00</strong>
-          </div>
-
-        </div>
-
-      </aside>
-
-    </section>
-
-    <section class="positions-section panel">
-
-      <div class="section-heading">
         <div>
-          <p class="eyebrow">YOUR TRADES</p>
-          <h2>Open Positions</h2>
+          <span>Available</span>
+
+          <strong id="availableBalance">
+            $10,000.00
+          </strong>
         </div>
 
-        <a href="portfolio.html" class="view-all">
-          View portfolio →
-        </a>
-      </div>
+        <div>
+          <span>Price</span>
 
-      <div id="positionsList" class="positions-list">
-        <div class="empty-state">
-          No open positions yet.
+          <strong id="tradePrice">
+            $0.0000124
+          </strong>
         </div>
+
       </div>
 
-    </section>
+      <label>
+        Amount in USD
+      </label>
 
-    <section class="features">
+      <div class="amount-input">
 
-      <div class="feature-card">
-        <span>📈</span>
-        <h3>Live Demo Charts</h3>
-        <p>Watch simulated market prices move in real time.</p>
+        <span>$</span>
+
+        <input
+          id="tradeAmount"
+          type="number"
+          min="1"
+          value="100"
+        >
+
       </div>
 
-      <div class="feature-card">
-        <span>🎯</span>
-        <h3>Practice Trading</h3>
-        <p>Buy and sell using virtual funds without real money.</p>
+      <div class="quick-buttons">
+
+        <button data-amount="25">
+          $25
+        </button>
+
+        <button data-amount="50">
+          $50
+        </button>
+
+        <button data-amount="100">
+          $100
+        </button>
+
+        <button data-amount="500">
+          $500
+        </button>
+
       </div>
 
-      <div class="feature-card">
-        <span>🏆</span>
-        <h3>Challenge Mode</h3>
-        <p>Test yourself against different virtual trading goals.</p>
+      <button
+        id="tradeButton"
+        class="trade-button buy-button"
+      >
+        Buy PEPE
+      </button>
+
+      <div class="position-preview">
+
+        <div class="preview-heading">
+
+          <strong>
+            Your Position
+          </strong>
+
+          <span id="positionStatus">
+            No position
+          </span>
+
+        </div>
+
+        <div class="preview-row">
+          <span>Quantity</span>
+          <strong id="positionQuantity">
+            0
+          </strong>
+        </div>
+
+        <div class="preview-row">
+          <span>Entry</span>
+          <strong id="positionEntry">
+            $0.00000000
+          </strong>
+        </div>
+
+        <div class="preview-row">
+          <span>Value</span>
+          <strong id="positionValue">
+            $0.00
+          </strong>
+        </div>
+
+        <div class="preview-row">
+          <span>P&L</span>
+          <strong id="positionPnl">
+            $0.00
+          </strong>
+        </div>
+
       </div>
 
-    </section>
+    </aside>
 
-  </main>
+  </section>
 
-  <div id="toastContainer" class="toast-container"></div>
+  <section class="panel positions-section">
 
-  <script src="storage.js"></script>
-  <script src="prices.js"></script>
-  <script src="animation.js"></script>
-  <script src="chart.js"></script>
-  <script src="app.js"></script>
-  <script src="script.js"></script>
+    <div class="section-heading">
+
+      <div>
+        <div class="eyebrow">
+          TRADING ACCOUNT
+        </div>
+
+        <h2>
+          Open Positions
+        </h2>
+      </div>
+
+      <a
+        href="portfolio.html"
+        class="text-link"
+      >
+        Full portfolio →
+      </a>
+
+    </div>
+
+    <div
+      id="positionsList"
+      class="positions-list"
+    ></div>
+
+  </section>
+
+</main>
+
+<div
+  id="toastContainer"
+  class="toast-container"
+></div>
+
+<script src="storage.js"></script>
+<script src="prices.js"></script>
+<script src="animation.js"></script>
+<script src="chart.js"></script>
+<script src="app.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>
