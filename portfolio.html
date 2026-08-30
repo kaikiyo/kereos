@@ -10,76 +10,85 @@
 <body>
 
 <header class="topbar">
-  <a href="index.html" class="logo">
-    <span class="logo-mark">K</span>
+  <a href="index.html" class="brand">
+    <span class="brand-icon">K</span>
     <span>KEREOS</span>
   </a>
 
   <nav>
     <a href="index.html">Terminal</a>
     <a href="markets.html">Markets</a>
-    <a class="active" href="portfolio.html">Portfolio</a>
+    <a href="portfolio.html" class="active">Portfolio</a>
     <a href="challenges.html">Challenges</a>
   </nav>
 
-  <div class="balance-box">
-    <span>Available</span>
+  <div class="demo-balance">
+    <small>AVAILABLE CASH</small>
     <strong id="navBalance">$10,000.00</strong>
   </div>
 </header>
 
-<main class="container">
 
-  <section class="page-header">
+<main class="container page">
+
+  <section class="page-heading">
     <div>
-      <p class="eyebrow">YOUR ACCOUNT</p>
+      <small>ACCOUNT OVERVIEW</small>
       <h1>Portfolio</h1>
-      <p>Monitor your simulated positions and performance.</p>
+      <p>Your simulated positions and performance.</p>
     </div>
   </section>
 
-  <section class="portfolio-overview">
 
-    <div class="big-balance">
-      <span>Total Portfolio Value</span>
-      <strong id="portfolioValue">$10,000.00</strong>
+  <section class="portfolio-stats">
+
+    <div class="big-stat">
+      <small>TOTAL VALUE</small>
+      <strong id="portfolioTotal">$10,000.00</strong>
     </div>
 
-    <div class="overview-stat">
-      <span>Cash</span>
-      <strong id="cashBalance">$10,000.00</strong>
+    <div class="big-stat">
+      <small>AVAILABLE CASH</small>
+      <strong id="portfolioCash">$10,000.00</strong>
     </div>
 
-    <div class="overview-stat">
-      <span>Unrealized P&L</span>
-      <strong id="totalPnl">$0.00</strong>
+    <div class="big-stat">
+      <small>UNREALIZED P&L</small>
+      <strong id="portfolioPnl">$0.00</strong>
     </div>
 
   </section>
 
-  <section class="section-heading">
+
+  <section class="section-title">
     <div>
-      <p class="eyebrow">OPEN POSITIONS</p>
+      <small>POSITIONS</small>
       <h2>Your holdings</h2>
     </div>
+
+    <a href="markets.html">Trade →</a>
   </section>
 
-  <section id="portfolioPositions" class="positions-list"></section>
 
-  <section id="emptyPortfolio" class="empty-state">
+  <section id="positions" class="positions"></section>
+
+
+  <div id="emptyPortfolio" class="empty-state">
     <div class="empty-icon">◎</div>
-    <h3>No open positions</h3>
-    <p>Visit the Markets page and buy a token to create your first demo position.</p>
-    <a href="markets.html" class="primary-btn">Explore Markets</a>
-  </section>
+    <h2>No open positions</h2>
+    <p>
+      Your positions will appear here when you make a simulated trade.
+    </p>
+
+    <a href="markets.html" class="button primary">
+      Explore Markets
+    </a>
+  </div>
 
 </main>
 
-<script src="storage.js"></script>
-<script src="price.js"></script>
-<script src="animation.js"></script>
+
 <script src="app.js"></script>
-<script src="script.js"></script>
 
 </body>
 </html>
