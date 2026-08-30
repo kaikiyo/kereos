@@ -1,91 +1,115 @@
 const COINS = {
   PEPE: {
-    symbol: "PEPE",
     name: "Pepe",
-    price: 0.0000124,
-    icon: "🐸"
+    symbol: "PEPE",
+    icon: "🐸",
+    price: 0.0000124
   },
 
   DOGE: {
-    symbol: "DOGE",
     name: "Dogecoin",
-    price: 0.2134,
-    icon: "🐕"
+    symbol: "DOGE",
+    icon: "🐕",
+    price: 0.2134
   },
 
   SHIB: {
-    symbol: "SHIB",
     name: "Shiba Inu",
-    price: 0.0000142,
-    icon: "🐶"
+    symbol: "SHIB",
+    icon: "🐶",
+    price: 0.0000142
   },
 
   BONK: {
-    symbol: "BONK",
     name: "Bonk",
-    price: 0.0000211,
-    icon: "🐕"
+    symbol: "BONK",
+    icon: "🐕",
+    price: 0.0000211
   },
 
   FLOKI: {
-    symbol: "FLOKI",
     name: "Floki",
-    price: 0.000091,
-    icon: "🐺"
+    symbol: "FLOKI",
+    icon: "🐺",
+    price: 0.000091
   },
 
   WIF: {
-    symbol: "WIF",
     name: "dogwifhat",
-    price: 0.842,
-    icon: "🐶"
+    symbol: "WIF",
+    icon: "🐶",
+    price: 0.842
   },
 
   BRETT: {
-    symbol: "BRETT",
     name: "Brett",
-    price: 0.0412,
-    icon: "🐸"
+    symbol: "BRETT",
+    icon: "🐸",
+    price: 0.0412
   },
 
   POPCAT: {
-    symbol: "POPCAT",
     name: "Popcat",
-    price: 0.421,
-    icon: "🐱"
+    symbol: "POPCAT",
+    icon: "🐱",
+    price: 0.421
+  },
+
+  MOG: {
+    name: "Mog Coin",
+    symbol: "MOG",
+    icon: "😼",
+    price: 0.00000112
+  },
+
+  TURBO: {
+    name: "Turbo",
+    symbol: "TURBO",
+    icon: "🤖",
+    price: 0.00342
   }
 };
 
-const marketState = {};
+const MARKET = {};
 
 Object.keys(COINS).forEach(symbol => {
-  marketState[symbol] = {
+  MARKET[symbol] = {
     price: COINS[symbol].price,
     previousPrice: COINS[symbol].price,
-    change24h: (Math.random() - 0.45) * 20,
-    history: []
+    change24h: (Math.random() - 0.45) * 18,
+    candles: []
   };
 
-  createInitialHistory(symbol);
+  createHistory(symbol);
 });
 
-function createInitialHistory(symbol) {
-  const state = marketState[symbol];
-  let price = state.price;
+function createHistory(symbol) {
+  const market = MARKET[symbol];
+
+  let price = market.price;
 
   const now = Math.floor(Date.now() / 1000);
 
   for (let i = 120; i >= 0; i--) {
-    const volatility = 0.006;
-    const movement = 1 + ((Math.random() - 0.5) * volatility);
-
     const open = price;
-    const close = price * movement;
 
-    const high = Math.max(open, close) * (1 + Math.random() * 0.002);
-    const low = Math.min(open, close) * (1 - Math.random() * 0.002);
+    const move =
+      1 + (Math.random() - 0.5) * 0.012;
 
-    state.history.push({
+    const close = Math.max(
+      open * move,
+      open * 0.95
+    );
+
+    const high =
+      Math.max(open, close) *
+      (1 + Math.random() * 0.004);
+
+    const low =
+      Math.min(open, close) *
+      (1 - Math.random() * 0.004);
+
+    market.candles.push({
       time: now - i * 10,
       open,
       high,
@@ -96,76 +120,81 @@ function createInitialHistory(symbol) {
     price = close;
   }
 
-  state.price = price;
-}
-
-function getCoin(symbol) {
-  return COINS[symbol];
+  market.price = price;
 }
 
 function getPrice(symbol) {
-  return marketState[symbol]?.price || 0;
+  return MARKET[symbol]
+    ? MARKET[symbol].price
+    : 0;
 }
 
 function getChange(symbol) {
-  return marketState[symbol]?.change24h || 0;
+  return MARKET[symbol]
+    ? MARKET[symbol].change24h
+    : 0;
 }
 
 function getHistory(symbol) {
-  return marketState[symbol]?.history || [];
+  return MARKET[symbol]
+    ? MARKET[symbol].candles
+    : [];
 }
 
-function formatPrice(price) {
-  if (price >= 1) {
-    return "$" + price.toFixed(4);
+function formatPrice(value) {
+  value = Number(value) || 0;
+
+  if (value >= 100) {
+    return "$" + value.toFixed(2);
   }
 
-  if (price >= 0.01) {
-    return "$" + price.toFixed(6);
+  if (value >= 1) {
+    return "$" + value.toFixed(4);
   }
 
-  if (price >= 0.0001) {
-    return "$" + price.toFixed(7);
+  if (value >= 0.01) {
+    return "$" + value.toFixed(6);
   }
 
-  return "$" + price.toFixed(10);
+  if (value >= 0.0001) {
+    return "$" + value.toFixed(7);
+  }
+
+  return "$" + value.toFixed(10);
 }
 
-function updatePrices() {
+function updateMarketPrices() {
 
-  Object.keys(COINS).forEach(symbol => {
+  Object.keys(MARKET).forEach(symbol => {
 
-    const state = marketState[symbol];
+    const market = MARKET[symbol];
 
-    state.previousPrice = state.price;
+    market.previousPrice = market.price;
 
-    /*
-      Small random movement.
+    const movement =
+      1 + (Math.random() - 0.5) * 0.01;
 
-      This is intentionally simulated.
-      It does not represent actual market prices.
-    */
+    const open = market.price;
 
-    const volatility = 0.008;
-    const movement = 1 + ((Math.random() - 0.5) * volatility);
-
-    const open = state.price;
     const close = Math.max(
-      state.price * movement,
-      state.price * 0.8
+      open * movement,
+      open * 0.8
     );
 
-    const high = Math.max(open, close) *
+    const high =
+      Math.max(open, close) *
       (1 + Math.random() * 0.003);
 
-    const low = Math.min(open, close) *
+    const low =
+      Math.min(open, close) *
       (1 - Math.random() * 0.003);
 
-    state.price = close;
+    market.price = close;
 
-    state.change24h += (Math.random() - 0.5) * 0.15;
+    market.change24h +=
+      (Math.random() - 0.5) * 0.12;
 
-    state.history.push({
+    market.candles.push({
       time: Math.floor(Date.now() / 1000),
       open,
       high,
@@ -173,14 +202,14 @@ function updatePrices() {
       close
     });
 
-    if (state.history.length > 500) {
-      state.history.shift();
+    if (market.candles.length > 300) {
+      market.candles.shift();
     }
   });
 
   document.dispatchEvent(
-    new CustomEvent("kereosPricesUpdated")
+    new CustomEvent("kereos:prices")
   );
 }
 
-setInterval(updatePrices, 3000);
+setInterval(updateMarketPrices, 2500);
