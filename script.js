@@ -1,9 +1,9 @@
 /*
-  Kereos compatibility file.
+  Kereos compatibility script.
 
-  Main application logic lives in app.js.
-  Keeping this file prevents older deployments from
-  breaking if script.js was previously referenced.
+  Main application logic is handled by app.js.
 */
 
-console.log("Kereos initialized.");
+console.log(
+  "Kereos demo terminal loaded."
+);
