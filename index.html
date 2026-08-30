@@ -1,116 +1,199 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kereos — Demo Trading Terminal</title>
+  <title>Kereos | Demo Trading Terminal</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<header class="topbar">
-  <a href="index.html" class="brand">
-    <span class="brand-icon">K</span>
+<header class="navbar">
+  <a href="index.html" class="logo">
+    <span class="logo-icon">K</span>
     <span>KEREOS</span>
   </a>
 
-  <nav>
+  <nav class="nav-links">
     <a href="index.html" class="active">Terminal</a>
     <a href="markets.html">Markets</a>
     <a href="portfolio.html">Portfolio</a>
     <a href="challenges.html">Challenges</a>
   </nav>
 
-  <div class="demo-balance">
-    <small>DEMO BALANCE</small>
+  <div class="nav-balance">
+    <span>DEMO CASH</span>
     <strong id="navBalance">$10,000.00</strong>
   </div>
 </header>
 
+<main class="container">
 
-<main>
-
-  <section class="hero container">
-
-    <div class="hero-copy">
-      <div class="live-status">
-        <span></span>
-        SIMULATION LIVE
+  <section class="terminal-header">
+    <div>
+      <div class="live-badge">
+        <span class="live-dot"></span>
+        LIVE DEMO MARKET
       </div>
 
-      <h1>Trade the<br><span>chaos.</span></h1>
+```
+  <h1>Trade the <span>Chaos.</span></h1>
 
-      <p>
-        Explore simulated meme-coin markets, build positions,
-        track performance and test your trading strategy.
-      </p>
+  <p>
+    A professional meme coin trading simulator.
+    Build positions, track prices and test your strategy.
+  </p>
+</div>
 
-      <div class="hero-buttons">
-        <a href="markets.html" class="button primary">
-          Explore Markets
-        </a>
-
-        <a href="challenges.html" class="button secondary">
-          Try a Challenge
-        </a>
-      </div>
-    </div>
-
-    <div class="hero-terminal">
-      <div class="terminal-header">
-        <span>LIVE MARKET</span>
-        <span class="terminal-live">● LIVE</span>
-      </div>
-
-      <div id="heroCoin"></div>
-
-      <canvas id="heroChart" width="600" height="240"></canvas>
-    </div>
+<div class="market-status">
+  <span>MARKET ENGINE</span>
+  <strong>● RUNNING</strong>
+</div>
+```
 
   </section>
 
+  <section class="terminal-grid">
 
-  <section class="container">
+```
+<div class="chart-panel panel">
 
-    <div class="section-title">
+  <div class="panel-header">
+    <div class="coin-heading">
+      <div class="coin-avatar">Ð</div>
+
       <div>
-        <small>MARKET WATCH</small>
-        <h2>Trending tokens</h2>
+        <h2 id="selectedCoinName">Dogecoin</h2>
+        <span id="selectedCoinSymbol">DOGE</span>
       </div>
-
-      <a href="markets.html">View all →</a>
     </div>
 
-    <div id="homeTokens" class="token-grid"></div>
+    <div class="price-display">
+      <strong id="selectedPrice">$0.000000</strong>
+      <span id="selectedChange">+0.00%</span>
+    </div>
+  </div>
+
+  <canvas id="priceChart"></canvas>
+
+  <div class="chart-info">
+    <span>SIMULATED LIVE DATA</span>
+    <span class="green">● UPDATING</span>
+  </div>
+
+</div>
+
+
+<div class="trade-panel panel">
+
+  <div class="trade-tabs">
+    <button class="trade-tab active">TRADE</button>
+  </div>
+
+  <div class="trade-coin">
+    <span>SELECTED TOKEN</span>
+    <strong id="tradeCoinSymbol">DOGE</strong>
+  </div>
+
+  <div class="trade-price">
+    <span>CURRENT PRICE</span>
+    <strong id="tradePrice">$0.000000</strong>
+  </div>
+
+  <label class="trade-label">
+    BUY AMOUNT
+  </label>
+
+  <div class="amount-input">
+    <span>$</span>
+    <input
+      id="tradeAmount"
+      type="number"
+      value="100"
+      min="1"
+    >
+  </div>
+
+  <div class="quick-amounts">
+    <button onclick="setAmount(25)">$25</button>
+    <button onclick="setAmount(50)">$50</button>
+    <button onclick="setAmount(100)">$100</button>
+    <button onclick="setAmount(500)">$500</button>
+  </div>
+
+  <button id="buyButton" class="buy-button">
+    BUY <span id="buySymbol">DOGE</span>
+  </button>
+
+  <button id="sellButton" class="sell-button">
+    SELL POSITION
+  </button>
+
+  <div class="trade-summary">
+    <div>
+      <span>DEMO CASH</span>
+      <strong id="tradeCash">$10,000.00</strong>
+    </div>
+
+    <div>
+      <span>POSITION</span>
+      <strong id="tradePosition">$0.00</strong>
+    </div>
+  </div>
+
+</div>
+```
 
   </section>
 
+  <section class="dashboard-section">
 
-  <section class="container dashboard-grid">
+```
+<div class="section-title">
+  <div>
+    <span>MARKET OVERVIEW</span>
+    <h2>Trending Tokens</h2>
+  </div>
 
-    <div class="dashboard-card">
-      <small>PORTFOLIO VALUE</small>
-      <strong id="homePortfolio">$10,000.00</strong>
-      <span id="homePnl" class="positive">+$0.00</span>
-    </div>
+  <a href="markets.html">View Markets →</a>
+</div>
 
-    <div class="dashboard-card">
-      <small>OPEN POSITIONS</small>
-      <strong id="homePositions">0</strong>
-      <span>Active holdings</span>
-    </div>
+<div id="trendingTokens" class="token-grid"></div>
+```
 
-    <div class="dashboard-card">
-      <small>AVAILABLE CASH</small>
-      <strong id="homeCash">$10,000.00</strong>
-      <span>Ready to trade</span>
-    </div>
+  </section>
+
+  <section class="stats-grid">
+
+```
+<div class="stat-card">
+  <span>PORTFOLIO VALUE</span>
+  <strong id="portfolioValue">$10,000.00</strong>
+</div>
+
+<div class="stat-card">
+  <span>AVAILABLE CASH</span>
+  <strong id="cashValue">$10,000.00</strong>
+</div>
+
+<div class="stat-card">
+  <span>OPEN POSITIONS</span>
+  <strong id="positionCount">0</strong>
+</div>
+
+<div class="stat-card">
+  <span>UNREALIZED P&L</span>
+  <strong id="totalPnl">$0.00</strong>
+</div>
+```
 
   </section>
 
 </main>
 
+<div id="toast"></div>
 
 <script src="app.js"></script>
 
