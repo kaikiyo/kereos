@@ -1,136 +1,320 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Challenges — Kereos</title>
+  <title>Kereos | Challenges</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<header class="topbar">
-  <a href="index.html" class="brand">
-    <span class="brand-icon">K</span>
+<header class="navbar">
+
+  <a href="index.html" class="logo">
+    <span class="logo-icon">K</span>
     <span>KEREOS</span>
   </a>
 
-  <nav>
+  <nav class="nav-links">
     <a href="index.html">Terminal</a>
     <a href="markets.html">Markets</a>
     <a href="portfolio.html">Portfolio</a>
     <a href="challenges.html" class="active">Challenges</a>
   </nav>
 
-  <div class="demo-balance">
-    <small>DEMO BALANCE</small>
+  <div class="nav-balance">
+    <span>DEMO CASH</span>
     <strong id="navBalance">$10,000.00</strong>
   </div>
+
 </header>
 
-
-<main class="container page">
+<main class="container page-container">
 
   <section class="challenge-hero">
 
-    <div>
-      <small>CHALLENGE LAB</small>
-      <h1>Test your strategy.</h1>
-      <p>
-        Complete simulated trading challenges and see how your
-        strategy performs.
-      </p>
-    </div>
+```
+<div>
 
-    <div class="challenge-number">
-      <small>START</small>
-      <strong>$100</strong>
-      <span>→ $200</span>
-    </div>
+  <span class="eyebrow">
+    KEREOS CHALLENGE LAB
+  </span>
+
+  <h1>
+    Can you beat the
+    <span>market?</span>
+  </h1>
+
+  <p>
+    Practice your strategy using simulated funds.
+    No real money or cryptocurrency is involved.
+  </p>
+
+</div>
+
+
+<div class="challenge-hero-stat">
+
+  <span>CURRENT CHALLENGE</span>
+
+  <strong>
+    $100 → $200
+  </strong>
+
+</div>
+```
 
   </section>
 
-
   <section class="challenge-grid">
 
-    <article class="challenge-card featured">
+```
+<!-- LEVEL 1 -->
 
-      <div class="challenge-top">
-        <span>LEVEL 01</span>
-        <b>AVAILABLE</b>
-      </div>
+<article
+  class="challenge-card featured-challenge"
+>
 
-      <h2>Double Up</h2>
+  <div class="challenge-top">
 
-      <p>
-        Start with $100 in simulated funds and attempt to reach $200.
-      </p>
+    <span class="challenge-level">
+      LEVEL 01
+    </span>
 
-      <div class="challenge-progress">
-        <div>
-          <span>PROGRESS</span>
-          <strong id="challengeProgress">$100 / $200</strong>
-        </div>
+    <span
+      id="challengeStatus"
+      class="challenge-status"
+    >
+      READY
+    </span>
 
-        <div class="progress-track">
-          <span id="progressBar"></span>
-        </div>
-      </div>
-
-      <button id="startChallenge" class="button primary">
-        Start Challenge
-      </button>
-
-      <button id="resetChallenge" class="button secondary hidden">
-        Reset Challenge
-      </button>
-
-    </article>
+  </div>
 
 
-    <article class="challenge-card">
+  <div class="challenge-main">
 
-      <div class="challenge-top">
-        <span>LEVEL 02</span>
-        <b>LOCKED</b>
-      </div>
+    <div class="challenge-icon">
+      2×
+    </div>
 
-      <h2>Moonshot</h2>
+    <h2>Double Up</h2>
 
-      <p>
-        Turn a simulated $500 into $1,000.
-      </p>
+    <p>
+      Start with $100 in simulated challenge funds
+      and try to reach $200.
+    </p>
 
-      <div class="locked-message">
-        Complete Level 01
-      </div>
-
-    </article>
+  </div>
 
 
-    <article class="challenge-card">
+  <div class="challenge-numbers">
 
-      <div class="challenge-top">
-        <span>LEVEL 03</span>
-        <b>LOCKED</b>
-      </div>
+    <div>
+      <span>START</span>
+      <strong>$100</strong>
+    </div>
 
-      <h2>Diamond Hands</h2>
+    <div>
+      <span>CURRENT</span>
+      <strong id="challengeBalance">
+        $100.00
+      </strong>
+    </div>
 
-      <p>
-        Reach a 50% simulated return while maintaining a position.
-      </p>
+    <div>
+      <span>TARGET</span>
+      <strong>$200</strong>
+    </div>
 
-      <div class="locked-message">
-        Complete Level 02
-      </div>
+  </div>
 
-    </article>
+
+  <div class="challenge-progress-info">
+
+    <span>PROGRESS</span>
+
+    <strong id="challengeProgressText">
+      $100.00 / $200.00
+    </strong>
+
+  </div>
+
+
+  <div class="progress-track">
+
+    <div
+      id="challengeProgressBar"
+      class="progress-fill"
+    ></div>
+
+  </div>
+
+
+  <button
+    id="startChallengeButton"
+    class="buy-button challenge-button"
+  >
+    START CHALLENGE
+  </button>
+
+
+  <button
+    id="resetChallengeButton"
+    class="secondary-button hidden"
+  >
+    RESET CHALLENGE
+  </button>
+
+
+  <p class="challenge-note">
+    Simulated prices and funds only.
+  </p>
+
+</article>
+
+
+
+<!-- LEVEL 2 -->
+
+<article class="challenge-card locked-challenge">
+
+  <div class="challenge-top">
+
+    <span class="challenge-level">
+      LEVEL 02
+    </span>
+
+    <span class="locked-status">
+      LOCKED
+    </span>
+
+  </div>
+
+
+  <div class="challenge-main">
+
+    <div class="challenge-icon locked">
+      🚀
+    </div>
+
+    <h2>Moonshot</h2>
+
+    <p>
+      Turn $500 of simulated funds
+      into $1,000.
+    </p>
+
+  </div>
+
+
+  <div class="locked-message">
+    🔒 Complete Level 01 first
+  </div>
+
+</article>
+
+
+
+<!-- LEVEL 3 -->
+
+<article class="challenge-card locked-challenge">
+
+  <div class="challenge-top">
+
+    <span class="challenge-level">
+      LEVEL 03
+    </span>
+
+    <span class="locked-status">
+      LOCKED
+    </span>
+
+  </div>
+
+
+  <div class="challenge-main">
+
+    <div class="challenge-icon locked">
+      ◆
+    </div>
+
+    <h2>Diamond Hands</h2>
+
+    <p>
+      Reach a 50% simulated return
+      while managing market volatility.
+    </p>
+
+  </div>
+
+
+  <div class="locked-message">
+    🔒 Complete Level 02 first
+  </div>
+
+</article>
+```
+
+  </section>
+
+  <section class="challenge-info">
+
+```
+<div class="info-card">
+
+  <span>HOW IT WORKS</span>
+
+  <h3>
+    A separate challenge balance
+  </h3>
+
+  <p>
+    Challenge funds are separate from your main
+    $10,000 demo portfolio.
+  </p>
+
+</div>
+
+
+<div class="info-card">
+
+  <span>GOAL</span>
+
+  <h3>
+    Reach the target
+  </h3>
+
+  <p>
+    Build simulated positions and increase
+    your challenge portfolio value.
+  </p>
+
+</div>
+
+
+<div class="info-card">
+
+  <span>RISK</span>
+
+  <h3>
+    Volatile by design
+  </h3>
+
+  <p>
+    Prices change continuously to create
+    a dynamic practice environment.
+  </p>
+
+</div>
+```
 
   </section>
 
 </main>
 
+<div id="toast"></div>
 
 <script src="app.js"></script>
 
