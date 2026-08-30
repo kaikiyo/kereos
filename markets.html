@@ -10,61 +10,64 @@
 <body>
 
 <header class="topbar">
-  <a href="index.html" class="logo">
-    <span class="logo-mark">K</span>
+  <a href="index.html" class="brand">
+    <span class="brand-icon">K</span>
     <span>KEREOS</span>
   </a>
 
   <nav>
     <a href="index.html">Terminal</a>
-    <a class="active" href="markets.html">Markets</a>
+    <a href="markets.html" class="active">Markets</a>
     <a href="portfolio.html">Portfolio</a>
     <a href="challenges.html">Challenges</a>
   </nav>
 
-  <div class="balance-box">
-    <span>Demo Balance</span>
+  <div class="demo-balance">
+    <small>DEMO BALANCE</small>
     <strong id="navBalance">$10,000.00</strong>
   </div>
 </header>
 
-<main class="container">
 
-  <section class="page-header">
+<main class="container page">
+
+  <section class="page-heading">
     <div>
-      <p class="eyebrow">MARKET EXPLORER</p>
+      <small>MARKET EXPLORER</small>
       <h1>Markets</h1>
-      <p>Watch simulated meme-coin prices move in real time.</p>
+      <p>Simulated prices update automatically.</p>
     </div>
 
-    <div class="live-pill">
-      <span></span> LIVE
+    <div class="live-status">
+      <span></span>
+      LIVE SIMULATION
     </div>
   </section>
 
-  <div class="market-toolbar">
+
+  <section class="market-tools">
+
     <input
-      id="marketSearch"
+      id="search"
       type="search"
-      placeholder="Search tokens..."
+      placeholder="Search meme coins..."
     >
 
-    <div class="market-filters">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="gainers">Gainers</button>
-      <button class="filter-btn" data-filter="losers">Losers</button>
+    <div>
+      <button class="filter active" data-filter="all">All</button>
+      <button class="filter" data-filter="gainers">Gainers</button>
+      <button class="filter" data-filter="losers">Losers</button>
     </div>
-  </div>
+
+  </section>
+
 
   <section id="marketList" class="market-list"></section>
 
 </main>
 
-<script src="storage.js"></script>
-<script src="price.js"></script>
-<script src="animation.js"></script>
+
 <script src="app.js"></script>
-<script src="script.js"></script>
 
 </body>
 </html>
