@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cyberpunk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>KEREOS — Institutional Fast Money Terminal</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Dynamic Cybernetic Particles Background -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Live Ticker Tape Marquee Banner -->
+  <div class="ticker-tape-banner">
+    <div class="ticker-track" id="ticker-marquee-track">
+      <!-- Injected dynamically via JS -->
+    </div>
+  </div>
+
+  <div class="app-container">
+    <!-- Left Navigation Sidebar (Desktop/Tablet) -->
+    <aside class="sidebar">
+      <div class="brand">
+        <svg viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="45" stroke="#a855f7" stroke-width="6"/>
+          <path d="M30 70 L50 30 L70 70" stroke="#06b6d4" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <div class="brand-text">
+          <h1>KEREOS</h1>
+          <span>QUANT TERMINAL PRO</span>
+        </div>
+      </div>
+
+      <ul class="nav-menu">
+        <li><a class="nav-link active" data-target="dashboard"><span class="nav-icon">📊</span> Terminal</a></li>
+        <li><a class="nav-link" data-target="portfolio"><span class="nav-icon">💼</span> Portfolio & Margin</a></li>
+        <li><a class="nav-link" data-target="markets"><span class="nav-icon">📈</span> Spot & Futures</a></li>
+        <li><a class="nav-link" data-target="orders"><span class="nav-icon">📜</span> Order Book Log</a></li>
+        <li><a class="nav-link" data-target="analytics"><span class="nav-icon">⚡</span> Quant Analytics</a></li>
+        <li><a class="nav-link" data-target="news"><span class="nav-icon">📡</span> Bloomberg AI Wire</a></li>
+      </ul>
+
+      <!-- Mini Live Telemetry Card -->
+      <div class="sidebar-telemetry">
+        <div class="telemetry-row">
+          <span>LATENCY</span>
+          <span class="telemetry-val" style="color:var(--accent-green);">6 ms</span>
+        </div>
+        <div class="telemetry-row">
+          <span>PRICE FEED</span>
+          <span class="telemetry-val" style="color:var(--accent-cyan);">CONNECTED (16 ASSETS)</span>
+        </div>
+        <div class="telemetry-row">
+          <span>QUANT ENGINE</span>
+          <span class="telemetry-val">v4.2 INSTITUTIONAL</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Terminal Content Area -->
+    <main class="main-wrapper">
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <div class="status-badge">
+            <div class="status-dot"></div>
+            <span>DEMO MARGIN: $100,000.00</span>
+          </div>
+          <div class="telemetry-pill">
+            <span>UNIVERSE: <strong>16 MARKETS</strong></span>
+          </div>
+        </div>
+
+        <div class="top-right">
+          <!-- Cyber Theme Selector -->
+          <div class="currency-selector-wrapper">
+            <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono)">THEME:</span>
+            <select class="select-box" id="theme-selector">
+              <option value="cyberpunk">🟣 Cyberpunk</option>
+              <option value="amber">🟡 Bloomberg Amber</option>
+              <option value="matrix">🟢 Matrix Emerald</option>
+              <option value="hyperliquid">🔵 Hyperliquid Blue</option>
+            </select>
+          </div>
+
+          <!-- Currency Selector -->
+          <div class="currency-selector-wrapper">
+            <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono)">CURRENCY:</span>
+            <select class="select-box" onchange="window.stateManager.state.settings.currency = this.value; window.stateManager.saveState();">
+              <option value="USD">USD ($)</option>
+              <option value="INR">INR (₹)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="GBP">GBP (£)</option>
+            </select>
+          </div>
+
+          <button class="btn-deposit-top" onclick="document.getElementById('deposit-modal').classList.add('active'); if(window.soundFX) window.soundFX.playClick();">
+            ⚡ Quick Deposit
+          </button>
+        </div>
+      </header>
+
+      <div class="content-area">
+        <!-- 1. DASHBOARD VIEW -->
+        <section id="page-dashboard" class="view-page active">
+          <!-- Top KPI Stats Grid -->
+          <div class="stats-grid">
+            <div class="card card-glow">
+              <div class="card-title">
+                <span>Portfolio Net Worth</span>
+                <span class="badge badge-neutral" id="dash-badge-currency">USD</span>
+              </div>
+              <div class="card-value" id="val-portfolio">$100,000.00</div>
+              <div class="card-subtext" id="dash-sub-networth">Cash + Margin Equity</div>
+            </div>
+            <div class="card">
+              <div class="card-title">
+                <span>Available Cash Balance</span>
+                <button class="btn-xs-action" onclick="document.getElementById('deposit-modal').classList.add('active');">Deposit</button>
+              </div>
+              <div class="card-value" id="val-cash">$100,000.00</div>
+              <div class="card-subtext">Free Margin For Trades</div>
+            </div>
+            <div class="card">
+              <div class="card-title">
+                <span>Unrealized P&L</span>
+                <span id="dash-pnl-pct" style="font-size:0.75rem; font-family:var(--font-mono)">+0.00%</span>
+              </div>
+              <div class="card-value" id="val-pnl">$0.00</div>
+              <div class="card-subtext">Open Floating Profit/Loss</div>
+            </div>
+          </div>
+
+          <!-- Main Terminal Layout: Chart + Order Book Sidebar -->
+          <div class="terminal-grid">
+            <!-- Left Side: Chart Section -->
+            <div class="chart-container">
+              <!-- 1-Click Fast Scalp & Leverage HUD Bar -->
+              <div class="scalp-hud-bar">
+                <div class="scalp-lot-controls">
+                  <span style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono)">LEV:</span>
+                  <button class="btn-leverage-size" data-lev="1">1x</button>
+                  <button class="btn-leverage-size" data-lev="5">5x</button>
+                  <button class="btn-leverage-size active" data-lev="10">10x</button>
+                  <button class="btn-leverage-size" data-lev="25">25x</button>
+                  <button class="btn-leverage-size" data-lev="50">50x</button>
+                  <button class="btn-leverage-size" data-lev="100">100x</button>
+
+                  <span style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono); margin-left:0.35rem;">LOT:</span>
+                  <button class="btn-lot-size" data-lot="0.1">0.1</button>
+                  <button class="btn-lot-size active" data-lot="0.5">0.5</button>
+                  <button class="btn-lot-size" data-lot="1.0">1.0</button>
+                  <button class="btn-lot-size" data-lot="5.0">5.0</button>
+                </div>
+                <div class="scalp-action-buttons">
+                  <button class="btn-fast-buy" id="btn-fast-scalp-buy">⚡ LONG (BUY)</button>
+                  <button class="btn-fast-sell" id="btn-fast-scalp-sell">⚡ SHORT (SELL)</button>
+                </div>
+              </div>
+
+              <div class="chart-wrapper">
+                <canvas id="trading-chart"></canvas>
+              </div>
+            </div>
+
+            <!-- Right Side: Live Order Book & AI Quant Signals -->
+            <div class="orderbook-container">
+              <!-- AI Quant Signals HUD Widget -->
+              <div class="card" style="padding:1rem; margin-bottom:1rem;">
+                <div class="card-title" style="margin-bottom:0.6rem;">
+                  <span>🤖 AI Quant Signals</span>
+                  <span class="status-dot"></span>
+                </div>
+                <div id="ai-quant-signals-container">
+                  <!-- Injected dynamically via JS -->
+                </div>
+              </div>
+
+              <!-- Order Book Depth -->
+              <div class="card" style="padding:1rem; margin-bottom:1rem;">
+                <div class="card-title" style="margin-bottom:0.75rem;">
+                  <span>Global Order Book</span>
+                  <span style="font-size:0.7rem; color:var(--accent-cyan);" id="orderbook-pair">BTC/USD</span>
+                </div>
+                
+                <div class="orderbook-headers">
+                  <span>Price</span>
+                  <span>Size</span>
+                  <span>Total</span>
+                </div>
+
+                <div class="orderbook-list asks-list" id="orderbook-asks"></div>
+
+                <div class="orderbook-spread">
+                  <span id="orderbook-mid-price" style="font-weight:700; color:var(--text-main);">$0.00</span>
+                  <span style="color:var(--text-dim); font-size:0.7rem;">SPREAD 0.01</span>
+                </div>
+
+                <div class="orderbook-list bids-list" id="orderbook-bids"></div>
+              </div>
+
+              <!-- Global Market Flow (Public Feed) -->
+              <div class="card" style="padding:1rem;">
+                <div class="card-title" style="margin-bottom:0.5rem;">
+                  <span>Global Market Flow (Public)</span>
+                  <span class="status-dot"></span>
+                </div>
+                <div class="recent-trades-list" id="recent-trades-list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. PORTFOLIO VIEW -->
+        <section id="page-portfolio" class="view-page">
+          <div class="stats-grid">
+            <div class="card card-glow">
+              <div class="card-title">
+                <span>Total Portfolio Net Worth</span>
+                <button class="btn-sm-action" id="btn-open-deposit">⚡ Add Funds</button>
+              </div>
+              <div class="card-value" id="port-val-total">$100,000.00</div>
+              <div class="card-subtext" id="port-sub-return">24h Return: +0.00%</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Available Free Cash</div>
+              <div class="card-value" id="port-val-cash">$100,000.00</div>
+              <div class="card-subtext" id="port-sub-cash-ratio">100% Liquidity</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Margin Position Value</div>
+              <div class="card-value" id="port-val-equity">$0.00</div>
+              <div class="card-subtext" id="port-sub-holdings-count">0 Open Positions</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Asset Allocation Distribution</div>
+            <div class="allocation-bar-container">
+              <div class="allocation-bar" id="portfolio-allocation-bar"></div>
+              <div class="allocation-legend" id="portfolio-allocation-legend"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Your Open Positions & Margin Contracts</div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Asset</th>
+                    <th>Side & Leverage</th>
+                    <th>Position Size</th>
+                    <th>Entry Price</th>
+                    <th>Mark Price</th>
+                    <th>Est. Liq Price</th>
+                    <th>7D Trend</th>
+                    <th>Unrealized P&L</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="portfolio-holdings-list"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. SPOT & FUTURES MARKETS VIEW -->
+        <section id="page-markets" class="view-page">
+          <div class="card">
+            <div class="card-header-flex">
+              <div>
+                <div class="card-title" style="margin-bottom:0.25rem;">Live Spot & Futures Markets (16 Instruments)</div>
+                <div style="font-size:0.75rem; color:var(--text-muted)">Streaming institutional quotes, 7-day sparklines, and 1x-100x leverage</div>
+              </div>
+              <div class="market-filter-chips">
+                <button class="filter-chip active" data-filter="ALL">All Markets (16)</button>
+                <button class="filter-chip" data-filter="CRYPTO">Crypto (6)</button>
+                <button class="filter-chip" data-filter="STOCKS">Tech Stocks (5)</button>
+                <button class="filter-chip" data-filter="COMMODITIES">Commodities (3)</button>
+                <button class="filter-chip" data-filter="FOREX">Forex (2)</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Market Instrument</th>
+                    <th>Current Price</th>
+                    <th>24h Change</th>
+                    <th>7D Sparkline</th>
+                    <th>24h Range</th>
+                    <th>24h Volume</th>
+                    <th>Trade Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="markets-list"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. ORDERS HISTORY VIEW -->
+        <section id="page-orders" class="view-page">
+          <div class="card">
+            <div class="card-header-flex">
+              <div>
+                <div class="card-title" style="margin-bottom:0.25rem;">Your Executed Order Ledger</div>
+                <div style="font-size:0.75rem; color:var(--text-muted)">Permanent record of all manual user trade fills & executions</div>
+              </div>
+              <div>
+                <button class="btn-sm-action" id="btn-export-csv">📥 Export CSV Ledger</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Timestamp</th>
+                    <th>Asset</th>
+                    <th>Side</th>
+                    <th>Leverage</th>
+                    <th>Execution Price</th>
+                    <th>Quantity</th>
+                    <th>Notional Total</th>
+                  </tr>
+                </thead>
+                <tbody id="orders-list"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. ANALYTICS VIEW -->
+        <section id="page-analytics" class="view-page">
+          <div class="stats-grid">
+            <div class="card">
+              <div class="card-title">Realized Net Profit</div>
+              <div class="card-value" id="analytics-realized-pnl">$0.00</div>
+              <div class="card-subtext">Booked Gains / Losses</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Total Orders Placed</div>
+              <div class="card-value" id="analytics-total-trades">0</div>
+              <div class="card-subtext" id="analytics-sub-trades">0 Longs &bull; 0 Shorts</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Win Rate Ratio</div>
+              <div class="card-value val-positive" id="analytics-win-rate">100%</div>
+              <div class="card-subtext">Profitable Executed Orders</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Quant Performance Telemetry</div>
+            <div class="analytics-metrics-grid">
+              <div class="metric-box">
+                <span class="metric-label">PROFIT FACTOR</span>
+                <span class="metric-val" style="color:var(--accent-cyan);">3.12</span>
+              </div>
+              <div class="metric-box">
+                <span class="metric-label">SHARPE RATIO</span>
+                <span class="metric-val" style="color:var(--accent-green);">2.18</span>
+              </div>
+              <div class="metric-box">
+                <span class="metric-label">MAX DRAWDOWN</span>
+                <span class="metric-val" style="color:var(--accent-red);">-1.20%</span>
+              </div>
+              <div class="metric-box">
+                <span class="metric-label">AVG TRADE DURATION</span>
+                <span class="metric-val">3.8 min</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6. BLOOMBERG INTELLIGENCE AI NEWS WIRE -->
+        <section id="page-news" class="view-page">
+          <div class="card">
+            <div class="news-header-banner">
+              <div>
+                <div class="card-title" style="margin-bottom:0.25rem;">📡 Bloomberg Intelligence & Reuters AI Wire</div>
+                <div style="font-size:0.75rem; color:var(--text-muted)">Real-time quantitative sentiment synthesis, market catalysts & direct trade triggers</div>
+              </div>
+              <div class="news-filter-chips">
+                <button class="filter-chip active" data-news-filter="ALL">All Feeds (6)</button>
+                <button class="filter-chip" data-news-filter="BREAKING">🔥 Breaking</button>
+                <button class="filter-chip" data-news-filter="CRYPTO">🪙 Crypto</button>
+                <button class="filter-chip" data-news-filter="TECH">🚀 Tech & AI</button>
+                <button class="filter-chip" data-news-filter="MACRO">🏛️ Macro & Fed</button>
+              </div>
+            </div>
+
+            <!-- Grid of Rich Institutional News Cards -->
+            <div class="news-feed-grid" id="news-feed-container">
+              <!-- Injected dynamically via JS -->
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Mobile Fixed Bottom Navigation Bar -->
+  <nav class="mobile-bottom-nav">
+    <a class="mobile-nav-btn active" data-target="dashboard">
+      <span class="mobile-nav-icon">📊</span>
+      <span>Terminal</span>
+    </a>
+    <a class="mobile-nav-btn" data-target="portfolio">
+      <span class="mobile-nav-icon">💼</span>
+      <span>Portfolio</span>
+    </a>
+    <a class="mobile-nav-btn" data-target="markets">
+      <span class="mobile-nav-icon">📈</span>
+      <span>Markets</span>
+    </a>
+    <a class="mobile-nav-btn" data-target="orders">
+      <span class="mobile-nav-icon">📜</span>
+      <span>Orders</span>
+    </a>
+    <a class="mobile-nav-btn" data-target="news">
+      <span class="mobile-nav-icon">📡</span>
+      <span>AI News</span>
+    </a>
+  </nav>
+
+  <!-- Trade Execution Modal Dialog -->
+  <div class="modal-overlay" id="trade-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modal-title">Execute Order</h3>
+        <button class="btn-close" id="modal-close">&times;</button>
+      </div>
+      <form id="trade-form">
+        <input type="hidden" id="trade-asset-id">
+        <input type="hidden" id="trade-mode">
+        
+        <div style="margin-bottom:0.85rem;">
+          <label style="font-size:0.8rem; color:var(--text-muted)">Position Leverage</label>
+          <div class="pct-group" style="margin:0.35rem 0 0.5rem 0;">
+            <button type="button" class="btn-pct btn-modal-lev" data-lev="1">1x</button>
+            <button type="button" class="btn-pct btn-modal-lev" data-lev="5">5x</button>
+            <button type="button" class="btn-pct btn-modal-lev" data-lev="10">10x</button>
+            <button type="button" class="btn-pct btn-modal-lev" data-lev="25">25x</button>
+          </div>
+        </div>
+
+        <label style="font-size:0.8rem; color:var(--text-muted)">Order Quantity</label>
+        <input type="number" step="any" id="trade-qty" class="select-box" style="width:100%; margin-top:0.35rem" required placeholder="0.00">
+
+        <div class="pct-group">
+          <button type="button" class="btn-pct" data-pct="10">10%</button>
+          <button type="button" class="btn-pct" data-pct="25">25%</button>
+          <button type="button" class="btn-pct" data-pct="50">50%</button>
+          <button type="button" class="btn-pct" data-pct="100">100%</button>
+        </div>
+
+        <button type="submit" id="btn-submit-trade" class="btn-submit btn-buy">CONFIRM ORDER</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Deposit Funds Modal Dialog -->
+  <div class="modal-overlay" id="deposit-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Deposit Demo Trading Capital</h3>
+        <button class="btn-close" id="deposit-close">&times;</button>
+      </div>
+      <form id="deposit-form">
+        <label style="font-size:0.8rem; color:var(--text-muted)">Deposit Amount ($ USD)</label>
+        <input type="number" step="any" id="deposit-amount" class="select-box" style="width:100%; margin-top:0.35rem" required placeholder="10000.00">
+
+        <div class="pct-group">
+          <button type="button" class="btn-pct btn-quick-fund" data-amount="5000">+$5,000</button>
+          <button type="button" class="btn-pct btn-quick-fund" data-amount="25000">+$25,000</button>
+          <button type="button" class="btn-pct btn-quick-fund" data-amount="100000">+$100,000</button>
+        </div>
+
+        <button type="submit" class="btn-submit" style="background:var(--accent-cyan); color:#083344; box-shadow:0 0 15px var(--accent-cyan-glow);">CONFIRM DEPOSIT</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Global Toast Notification Hub -->
+  <div id="toast-container"></div>
+
+  <!-- Script Modules in strict dependency order -->
+  <script src="js/logos.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/chart.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
