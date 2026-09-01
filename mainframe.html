@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mainframe® — Adaptive Response Interface Agent</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Fonts -->
+  <link rel="stylesheet" href="https://db.onlinewebfonts.com/c/5ac3fe7c6abd2f62067f266d89671492?family=HelveticaNowDisplay-Medium">
+  <link rel="stylesheet" href="https://db.onlinewebfonts.com/c/1aa3377e489837a26d019bba501e779d?family=HelveticaNowDisplayW01-Rg">
+
+  <style>
+    :root {
+      --font-heading: 'HelveticaNowDisplay-Medium', 'Helvetica Neue', Arial, sans-serif;
+      --font-body: 'HelveticaNowDisplayW01-Rg', 'Helvetica Neue', Arial, sans-serif;
+    }
+    
+    body {
+      font-family: var(--font-body);
+      background-color: #000;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    .font-heading {
+      font-family: var(--font-heading);
+    }
+
+    .font-body {
+      font-family: var(--font-body);
+    }
+
+    /* Video styling */
+    .bg-video {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      object-fit: cover;
+      object-position: 70% center;
+      pointer-events: none;
+    }
+
+    /* Cursor animation */
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .cursor-blink {
+      animation: blink 1s step-end infinite;
+    }
+
+    /* Pills animation */
+    .pills-container {
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .pills-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Modal Overlay Animation */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      background: rgba(14, 18, 32, 0.96);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      border-radius: 16px;
+      padding: 1.75rem;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(168, 85, 247, 0.2);
+      transform: scale(0.96);
+      transition: transform 0.25s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-overlay.active .modal-box {
+      transform: scale(1);
+    }
+
+    /* Toast notification for copy */
+    #copy-toast {
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+  </style>
+</head>
+<body class="relative min-h-screen bg-black select-none md:select-auto">
+
+  <!-- Background Video (mouse-scrub controlled) -->
+  <video 
+    id="hero-video" 
+    class="bg-video"
+    muted 
+    playsinline 
+    preload="auto"
+    src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260826_041744_63efcd78-bf7d-4039-99e2-2461e8a61903.mp4">
+  </video>
+
+  <!-- NAVBAR (fixed, z-index: 10) -->
+  <header class="fixed top-0 left-0 w-full z-10 px-5 sm:px-8 py-4 sm:py-5 flex justify-between items-center bg-black/30 backdrop-blur-sm border-b border-white/5">
+    <!-- Logo (left) -->
+    <div class="flex items-center gap-3">
+      <a href="index.html" class="font-heading text-[21px] sm:text-[26px] tracking-tight text-white select-none hover:opacity-80 transition-opacity flex items-center gap-1">
+        Mainframe&reg;
+      </a>
+      <span class="text-[25px] sm:text-[30px] text-white select-none -tracking-[0.02em] leading-none" aria-hidden="true">
+        ✳︎
+      </span>
+    </div>
+
+    <!-- Desktop nav links (center, hidden below md) -->
+    <nav class="hidden md:flex items-center text-[23px] text-white space-x-1 font-normal">
+      <a href="#labs" class="hover:opacity-60 transition-opacity">Labs</a><span class="mr-1">,</span>
+      <a href="#studio" class="hover:opacity-60 transition-opacity">Studio</a><span class="mr-1">,</span>
+      <a href="#openings" class="hover:opacity-60 transition-opacity">Openings</a><span class="mr-1">,</span>
+      <a href="#shop" class="hover:opacity-60 transition-opacity">Shop</a>
+    </nav>
+
+    <!-- Desktop CTA (right, hidden below md) -->
+    <div class="hidden md:flex items-center gap-4">
+      <a href="index.html" class="text-[15px] font-mono text-cyan-400 border border-cyan-500/40 px-3.5 py-1.5 rounded-full hover:bg-cyan-500/15 transition-all shadow-[0_0_12px_rgba(6,182,212,0.3)]">
+        ⚡ Launch KEREOS Terminal
+      </a>
+      <a href="mailto:hanzalnabi5@gmail.com" class="text-[21px] text-white underline underline-offset-2 hover:opacity-60 transition-opacity">
+        Get in touch
+      </a>
+    </div>
+
+    <!-- Mobile hamburger (visible below md) -->
+    <button 
+      id="hamburger-btn" 
+      aria-label="Toggle menu" 
+      class="md:hidden flex flex-col justify-center items-center gap-[5px] w-8 h-8 z-20 cursor-pointer focus:outline-none">
+      <span id="bar-1" class="w-6 h-[2px] bg-white transition-all duration-300 transform origin-center"></span>
+      <span id="bar-2" class="w-6 h-[2px] bg-white transition-all duration-300"></span>
+      <span id="bar-3" class="w-6 h-[2px] bg-white transition-all duration-300 transform origin-center"></span>
+    </button>
+  </header>
+
+  <!-- Mobile overlay (z-index: 9) -->
+  <div 
+    id="mobile-overlay" 
+    class="fixed inset-0 bg-black/90 backdrop-blur-md z-[9] flex flex-col justify-center items-start px-8 gap-8 opacity-0 pointer-events-none transition-opacity duration-300 md:hidden">
+    <a href="index.html" class="mobile-nav-link text-[26px] font-mono font-medium text-cyan-400 hover:opacity-70 transition-opacity">⚡ Open KEREOS Terminal</a>
+    <a href="#labs" class="mobile-nav-link text-[32px] font-medium text-white hover:opacity-70 transition-opacity">Labs</a>
+    <a href="#studio" class="mobile-nav-link text-[32px] font-medium text-white hover:opacity-70 transition-opacity">Studio</a>
+    <a href="#openings" class="mobile-nav-link text-[32px] font-medium text-white hover:opacity-70 transition-opacity">Openings</a>
+    <a href="#shop" class="mobile-nav-link text-[32px] font-medium text-white hover:opacity-70 transition-opacity">Shop</a>
+    <a href="mailto:hanzalnabi5@gmail.com" class="mobile-nav-link text-[32px] font-medium text-white underline underline-offset-4 hover:opacity-70 transition-opacity">Get in touch</a>
+  </div>
+
+  <!-- HERO SECTION (z-index: 1) -->
+  <main class="relative z-[1] h-screen w-full flex flex-col justify-end pb-12 md:justify-center md:pb-0 px-5 sm:px-8 md:px-10 overflow-hidden">
+    <div class="max-w-xl relative z-10">
+      
+      <!-- 1. Blurred intro label -->
+      <div 
+        class="pointer-events-none select-none mb-5 sm:mb-6 text-white font-normal" 
+        style="font-size: clamp(18px, 4vw, 26px); line-height: 1.3; filter: blur(4px);">
+        Hey there, meet A.R.I.A,<br>
+        Mainframe's Adaptive Response Interface Agent
+      </div>
+
+      <!-- 2. Typewriter text -->
+      <p 
+        id="typewriter-container" 
+        class="text-white mb-5 sm:mb-6 font-normal min-h-[54px]"
+        style="font-size: clamp(18px, 4vw, 26px); line-height: 1.35;">
+        <span id="typewriter-text"></span><span id="typewriter-cursor" class="inline-block w-[2px] h-[1.1em] bg-white align-middle ml-[2px] cursor-blink"></span>
+      </p>
+
+      <!-- 3. Action pill buttons with direct functional connections -->
+      <div id="pills-wrapper" class="pills-container flex flex-wrap gap-y-1">
+        <!-- 4 white pill buttons -->
+        <button 
+          onclick="openModal('modal-pitch')"
+          class="pill-btn inline-flex items-center justify-center bg-white text-black border border-black/10 rounded-full text-[13px] sm:text-[15px] px-4 sm:px-5 py-[0.3em] mx-[0.2em] mb-[0.4em] whitespace-nowrap hover:bg-black hover:text-white transition-colors duration-200 cursor-pointer">
+          💡 Pitch us an idea
+        </button>
+        <button 
+          onclick="openModal('modal-careers')"
+          class="pill-btn inline-flex items-center justify-center bg-white text-black border border-black/10 rounded-full text-[13px] sm:text-[15px] px-4 sm:px-5 py-[0.3em] mx-[0.2em] mb-[0.4em] whitespace-nowrap hover:bg-black hover:text-white transition-colors duration-200 cursor-pointer">
+          💼 Come work here
+        </button>
+        <button 
+          onclick="openModal('modal-hello')"
+          class="pill-btn inline-flex items-center justify-center bg-white text-black border border-black/10 rounded-full text-[13px] sm:text-[15px] px-4 sm:px-5 py-[0.3em] mx-[0.2em] mb-[0.4em] whitespace-nowrap hover:bg-black hover:text-white transition-colors duration-200 cursor-pointer">
+          👋 Send a brief hello
+        </button>
+        <button 
+          onclick="openModal('modal-operate')"
+          class="pill-btn inline-flex items-center justify-center bg-white text-black border border-black/10 rounded-full text-[13px] sm:text-[15px] px-4 sm:px-5 py-[0.3em] mx-[0.2em] mb-[0.4em] whitespace-nowrap hover:bg-black hover:text-white transition-colors duration-200 cursor-pointer">
+          ⚙️ See how we operate
+        </button>
+
+        <!-- 1 outline pill button with copy icon for hanzalnabi5@gmail.com -->
+        <button 
+          id="copy-email-btn"
+          class="inline-flex items-center justify-center text-white bg-transparent border border-white rounded-full text-[13px] sm:text-[15px] px-4 sm:px-5 py-[0.3em] mx-[0.2em] mb-[0.4em] whitespace-nowrap hover:bg-white hover:text-black transition-colors duration-200 cursor-pointer gap-2 sm:gap-3">
+          <span>Reach us: <span class="underline underline-offset-1">hanzalnabi5@gmail.com</span></span>
+          <!-- 12x12 SVG Copy Icon -->
+          <svg class="w-3 h-3 fill-none stroke-current" viewBox="0 0 12 12" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3.5" y="3.5" width="7" height="7" rx="1"></rect>
+            <path d="M8.5 3.5V2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v5.5a1 1 0 0 0 1 1h1.5"></path>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Modal 1: Pitch Us An Idea -->
+  <div id="modal-pitch" class="modal-overlay">
+    <div class="modal-box">
+      <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
+        <h3 class="text-xl font-bold text-white flex items-center gap-2">💡 Pitch an Idea to Mainframe & KEREOS</h3>
+        <button onclick="closeModal('modal-pitch')" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+      </div>
+      <form onsubmit="handlePitchSubmit(event)" class="space-y-4 text-sm">
+        <div>
+          <label class="text-gray-400 text-xs block mb-1">Your Name / Organization</label>
+          <input type="text" id="p-name" required placeholder="Alex Rivera / Quant Lab" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-cyan-400">
+        </div>
+        <div>
+          <label class="text-gray-400 text-xs block mb-1">Your Email</label>
+          <input type="email" id="p-email" required placeholder="alex@domain.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-cyan-400">
+        </div>
+        <div>
+          <label class="text-gray-400 text-xs block mb-1">Category</label>
+          <select id="p-cat" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-cyan-400">
+            <option>🤖 Algorithmic Trading Bot & Model</option>
+            <option>🧠 AI Sentiment NLP Engine</option>
+            <option>🎨 Terminal Interface & WebGL Concept</option>
+            <option>🏛️ Institutional Liquidity Pipeline</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-gray-400 text-xs block mb-1">Idea Details & Architecture</label>
+          <textarea id="p-desc" required rows="3" placeholder="Describe your concept, alpha strategy, or collaboration proposal..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-cyan-400 resize-none"></textarea>
+        </div>
+        <div class="flex justify-between items-center pt-2">
+          <a href="mailto:hanzalnabi5@gmail.com?subject=Idea%20Pitch%20to%20Mainframe" class="text-xs text-cyan-400 hover:underline">✉️ Direct Email: hanzalnabi5@gmail.com</a>
+          <button type="submit" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-5 py-2 rounded-full transition-all">Submit Proposal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Come Work Here -->
+  <div id="modal-careers" class="modal-overlay">
+    <div class="modal-box">
+      <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
+        <h3 class="text-xl font-bold text-white flex items-center gap-2">🚀 Join Mainframe & KEREOS</h3>
+        <button onclick="closeModal('modal-careers')" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+      </div>
+      <div class="space-y-3 mb-4 text-xs">
+        <div class="p-3 bg-slate-900/80 border border-slate-800 rounded-lg border-l-4 border-l-cyan-400">
+          <strong class="text-white text-sm block mb-1">💻 Quantitative Rust/C++ Systems Engineer</strong>
+          <span class="text-gray-400">Build ultra-low-latency order routers, microsecond matching engines, and live WebSocket market feeds.</span>
+        </div>
+        <div class="p-3 bg-slate-900/80 border border-slate-800 rounded-lg border-l-4 border-l-purple-400">
+          <strong class="text-white text-sm block mb-1">🧠 AI Financial NLP Researcher</strong>
+          <span class="text-gray-400">Extract high-frequency macro catalysts from live Bloomberg & Reuters intelligence wires.</span>
+        </div>
+      </div>
+      <form onsubmit="handleCareerSubmit(event)" class="space-y-3 text-sm">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-gray-400 text-xs block mb-1">Full Name</label>
+            <input type="text" id="c-name" required placeholder="Jane Doe" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-cyan-400">
+          </div>
+          <div>
+            <label class="text-gray-400 text-xs block mb-1">Email</label>
+            <input type="email" id="c-email" required placeholder="jane@domain.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-cyan-400">
+          </div>
+        </div>
+        <div>
+          <label class="text-gray-400 text-xs block mb-1">GitHub / Portfolio URL</label>
+          <input type="url" id="c-link" placeholder="https://github.com/yourhandle" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-cyan-400">
+        </div>
+        <div>
+          <label class="text-gray-400 text-xs block mb-1">Introduction</label>
+          <textarea id="c-intro" required rows="2" placeholder="Tell us about the hardest system or design problem you've solved..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-cyan-400 resize-none"></textarea>
+        </div>
+        <div class="flex justify-between items-center pt-2">
+          <a href="mailto:hanzalnabi5@gmail.com?subject=Job%20Application%20-%20Mainframe" class="text-xs text-purple-400 hover:underline">✉️ Send CV to hanzalnabi5@gmail.com</a>
+          <button type="submit" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-5 py-2 rounded-full transition-all">Transmit Application</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Send a Brief Hello -->
+  <div id="modal-hello" class="modal-overlay">
+    <div class="modal-box">
+      <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
+        <h3 class="text-xl font-bold text-white flex items-center gap-2">👋 Send a Brief Hello to A.R.I.A</h3>
+        <button onclick="closeModal('modal-hello')" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+      </div>
+      <div class="space-y-2 mb-3">
+        <span class="text-xs text-gray-400 block">Quick Message Presets:</span>
+        <div class="flex flex-col gap-1.5">
+          <button type="button" onclick="setHelloPreset('⚡ Amazing terminal aesthetics and ultra-responsive layout!')" class="text-left text-xs bg-slate-900 hover:bg-purple-900/40 border border-slate-800 rounded px-3 py-2 text-gray-200">⚡ Amazing Terminal Design</button>
+          <button type="button" onclick="setHelloPreset('📈 Love the live candlestick chart and AI signals feature!')" class="text-left text-xs bg-slate-900 hover:bg-purple-900/40 border border-slate-800 rounded px-3 py-2 text-gray-200">📈 Great Chart & AI Signals</button>
+          <button type="button" onclick="setHelloPreset('🤝 Interested in discussing an institutional partnership.')" class="text-left text-xs bg-slate-900 hover:bg-purple-900/40 border border-slate-800 rounded px-3 py-2 text-gray-200">🤝 Enterprise Partnership</button>
+        </div>
+      </div>
+      <form onsubmit="handleHelloSubmit(event)" class="space-y-3 text-sm">
+        <div>
+          <label class="text-gray-400 text-xs block mb-1">Your Email</label>
+          <input type="email" id="h-email" required placeholder="you@domain.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-cyan-400">
+        </div>
+        <div>
+          <label class="text-gray-400 text-xs block mb-1">Message</label>
+          <textarea id="h-msg" required rows="3" placeholder="Type your greeting or choose a preset above..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-cyan-400 resize-none"></textarea>
+        </div>
+        <div class="flex justify-between items-center pt-2">
+          <a href="mailto:hanzalnabi5@gmail.com?subject=Hello%20A.R.I.A" class="text-xs text-gray-400 hover:underline">✉️ Direct: hanzalnabi5@gmail.com</a>
+          <button type="submit" class="bg-white hover:bg-gray-200 text-black font-bold px-5 py-2 rounded-full transition-all">Send Message</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 4: See How We Operate -->
+  <div id="modal-operate" class="modal-overlay">
+    <div class="modal-box">
+      <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
+        <h3 class="text-xl font-bold text-white flex items-center gap-2">⚙️ How Mainframe & KEREOS Operate</h3>
+        <button onclick="closeModal('modal-operate')" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs mb-4">
+        <div class="p-3 bg-slate-900 border border-slate-800 rounded-lg">
+          <div class="font-mono text-cyan-400 font-bold mb-1">01. High-Frequency Engine</div>
+          <p class="text-gray-400">Real-time WebSocket market streams connecting 16 instruments with 1x to 100x leverage capability.</p>
+        </div>
+        <div class="p-3 bg-slate-900 border border-slate-800 rounded-lg">
+          <div class="font-mono text-purple-400 font-bold mb-1">02. Autonomous AI Wire</div>
+          <p class="text-gray-400">Machine learning NLP parsers extracting sentiment catalysts from Bloomberg & Reuters in real-time.</p>
+        </div>
+        <div class="p-3 bg-slate-900 border border-slate-800 rounded-lg">
+          <div class="font-mono text-emerald-400 font-bold mb-1">03. 10X Canvas Charting</div>
+          <p class="text-gray-400">60 FPS OHLC candlesticks, EMA 9/21/55 dynamic ribbons, Bollinger envelopes, and RSI/MACD sub-oscillators.</p>
+        </div>
+        <div class="p-3 bg-slate-900 border border-slate-800 rounded-lg">
+          <div class="font-mono text-amber-400 font-bold mb-1">04. Risk Parity & Defense</div>
+          <p class="text-gray-400">Dynamic liquidation boundaries, real-time unrealized ROE metrics, and zero-latency position close triggers.</p>
+        </div>
+      </div>
+      <div class="flex justify-between items-center bg-cyan-950/30 border border-cyan-500/20 p-3 rounded-lg">
+        <span class="text-xs text-cyan-300">Ready to test the terminal?</span>
+        <a href="index.html" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-full transition-all">⚡ Open KEREOS Terminal</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Copy Toast Notification -->
+  <div 
+    id="copy-toast" 
+    class="fixed bottom-6 right-6 z-50 bg-white text-black text-xs font-semibold px-4 py-2 rounded-full shadow-lg opacity-0 pointer-events-none transform translate-y-2">
+    ✓ Copied hanzalnabi5@gmail.com to clipboard
+  </div>
+
+  <script>
+    // Modal Open/Close Handlers
+    function openModal(id) {
+      document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+      const el = document.getElementById(id);
+      if (el) el.classList.add('active');
+    }
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('active');
+    }
+    document.querySelectorAll('.modal-overlay').forEach(m => {
+      m.addEventListener('click', (e) => {
+        if (e.target === m) m.classList.remove('active');
+      });
+    });
+
+    // Form handlers
+    function handlePitchSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('p-name').value;
+      const email = document.getElementById('p-email').value;
+      const cat = document.getElementById('p-cat').value;
+      const desc = document.getElementById('p-desc').value;
+      window.open(`mailto:hanzalnabi5@gmail.com?subject=${encodeURIComponent('[Mainframe Pitch] ' + cat + ' - ' + name)}&body=${encodeURIComponent('From: ' + name + ' (' + email + ')\n\n' + desc)}`, '_blank');
+      closeModal('modal-pitch');
+      showToast('🚀 Idea proposal transmitted to hanzalnabi5@gmail.com!');
+    }
+
+    function handleCareerSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('c-name').value;
+      const email = document.getElementById('c-email').value;
+      const link = document.getElementById('c-link').value;
+      const intro = document.getElementById('c-intro').value;
+      window.open(`mailto:hanzalnabi5@gmail.com?subject=${encodeURIComponent('[Job Application] ' + name)}&body=${encodeURIComponent('From: ' + name + ' (' + email + ')\nPortfolio: ' + link + '\n\n' + intro)}`, '_blank');
+      closeModal('modal-careers');
+      showToast('💼 Application submitted to hanzalnabi5@gmail.com!');
+    }
+
+    function setHelloPreset(text) {
+      const el = document.getElementById('h-msg');
+      if (el) el.value = text;
+    }
+
+    function handleHelloSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('h-email').value;
+      const msg = document.getElementById('h-msg').value;
+      window.open(`mailto:hanzalnabi5@gmail.com?subject=${encodeURIComponent('[Hello from Mainframe] ' + email)}&body=${encodeURIComponent(msg)}`, '_blank');
+      closeModal('modal-hello');
+      showToast('👋 Greeting dispatched to hanzalnabi5@gmail.com!');
+    }
+
+    // ==========================================
+    // 1. BACKGROUND VIDEO (MOUSE-SCRUB CONTROL)
+    // ==========================================
+    const video = document.getElementById('hero-video');
+    let prevX = null;
+    let targetTime = 0;
+    let isSeeking = false;
+    let hasQueuedSeek = false;
+    const SENSITIVITY = 0.8;
+
+    video.addEventListener('loadedmetadata', () => {
+      targetTime = 0;
+      video.currentTime = 0;
+    });
+
+    function seekVideo() {
+      if (!video.duration) return;
+      if (isSeeking) {
+        hasQueuedSeek = true;
+        return;
+      }
+      isSeeking = true;
+      video.currentTime = targetTime;
+    }
+
+    video.addEventListener('seeked', () => {
+      isSeeking = false;
+      if (hasQueuedSeek) {
+        hasQueuedSeek = false;
+        seekVideo();
+      }
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (prevX === null) {
+        prevX = e.clientX;
+        return;
+      }
+      const delta = e.clientX - prevX;
+      prevX = e.clientX;
+
+      if (!video.duration) return;
+
+      const timeOffset = (delta / window.innerWidth) * SENSITIVITY * video.duration;
+      targetTime = Math.min(Math.max(0, targetTime + timeOffset), video.duration);
+
+      seekVideo();
+    });
+
+    // Touch support for mobile scrubbing
+    let touchStartX = null;
+    window.addEventListener('touchmove', (e) => {
+      if (!e.touches.length) return;
+      const touchX = e.touches[0].clientX;
+      if (touchStartX === null) {
+        touchStartX = touchX;
+        return;
+      }
+      const delta = touchX - touchStartX;
+      touchStartX = touchX;
+
+      if (!video.duration) return;
+      const timeOffset = (delta / window.innerWidth) * SENSITIVITY * video.duration;
+      targetTime = Math.min(Math.max(0, targetTime + timeOffset), video.duration);
+      seekVideo();
+    }, { passive: true });
+
+    window.addEventListener('touchend', () => {
+      touchStartX = null;
+    });
+
+    // ==========================================
+    // 2. TYPEWRITER EFFECT
+    // ==========================================
+    const typewriterText = "Glad you stopped in. Good taste tends to find us. Now, what are we building?";
+    const typewriterElem = document.getElementById('typewriter-text');
+    const cursorElem = document.getElementById('typewriter-cursor');
+    const SPEED = 38;
+    const START_DELAY = 600;
+
+    setTimeout(() => {
+      let charIndex = 0;
+      const interval = setInterval(() => {
+        if (charIndex < typewriterText.length) {
+          typewriterElem.textContent += typewriterText.charAt(charIndex);
+          charIndex++;
+        } else {
+          clearInterval(interval);
+          if (cursorElem) cursorElem.style.display = 'none';
+        }
+      }, SPEED);
+    }, START_DELAY);
+
+    // ==========================================
+    // 3. ACTION PILL BUTTONS (400ms FADE IN)
+    // ==========================================
+    const pillsWrapper = document.getElementById('pills-wrapper');
+    setTimeout(() => {
+      if (pillsWrapper) {
+        pillsWrapper.classList.add('pills-visible');
+      }
+    }, 400);
+
+    // ==========================================
+    // 4. COPY TO CLIPBOARD HANDLER
+    // ==========================================
+    const copyBtn = document.getElementById('copy-email-btn');
+    const toast = document.getElementById('copy-toast');
+
+    if (copyBtn) {
+      copyBtn.addEventListener('click', async () => {
+        const email = "hanzalnabi5@gmail.com";
+        try {
+          await navigator.clipboard.writeText(email);
+          showToast(`✓ Copied ${email} to clipboard`);
+        } catch (err) {
+          console.error("Clipboard copy failed: ", err);
+        }
+      });
+    }
+
+    function showToast(msg) {
+      if (!toast) return;
+      if (msg) toast.textContent = msg;
+      toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-2');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-2');
+      }, 2500);
+    }
+
+    // ==========================================
+    // 5. MOBILE HAMBURGER TOGGLE
+    // ==========================================
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const mobileOverlay = document.getElementById('mobile-overlay');
+    const bar1 = document.getElementById('bar-1');
+    const bar2 = document.getElementById('bar-2');
+    const bar3 = document.getElementById('bar-3');
+    let isMenuOpen = false;
+
+    if (hamburgerBtn && mobileOverlay) {
+      hamburgerBtn.addEventListener('click', () => {
+        isMenuOpen = !isMenuOpen;
+        if (isMenuOpen) {
+          bar1.style.transform = 'translateY(7px) rotate(45deg)';
+          bar2.style.opacity = '0';
+          bar3.style.transform = 'translateY(-7px) rotate(-45deg)';
+          mobileOverlay.classList.remove('opacity-0', 'pointer-events-none');
+          mobileOverlay.classList.add('opacity-100', 'pointer-events-auto');
+        } else {
+          bar1.style.transform = 'none';
+          bar2.style.opacity = '1';
+          bar3.style.transform = 'none';
+          mobileOverlay.classList.remove('opacity-100', 'pointer-events-auto');
+          mobileOverlay.classList.add('opacity-0', 'pointer-events-none');
+        }
+      });
+
+      document.querySelectorAll('.mobile-nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+          if (isMenuOpen) hamburgerBtn.click();
+        });
+      });
+    }
+  </script>
+</body>
+</html>

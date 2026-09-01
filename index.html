@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cyberpunk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>KEREOS — Institutional Fast Money Terminal</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Dynamic Cybernetic Particles Background -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Live Ticker Tape Marquee Banner -->
+  <div class="ticker-tape-banner">
+    <div class="ticker-track" id="ticker-marquee-track">
+      <!-- Injected dynamically via JS -->
+    </div>
+  </div>
+
+  <div class="app-container">
+    <!-- Left Navigation Sidebar (Desktop/Tablet) -->
+    <aside class="sidebar">
+      <div class="brand">
+        <svg viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="45" stroke="#a855f7" stroke-width="6"/>
+          <path d="M30 70 L50 30 L70 70" stroke="#06b6d4" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <div class="brand-text">
+          <h1>KEREOS</h1>
+          <span>QUANT TERMINAL PRO</span>
+        </div>
+      </div>
+
+      <ul class="nav-menu">
+        <li><a class="nav-link active" data-target="dashboard"><span class="nav-icon">📊</span> Terminal</a></li>
+        <li><a class="nav-link" data-target="portfolio"><span class="nav-icon">💼</span> Portfolio & Margin</a></li>
+        <li><a class="nav-link" data-target="markets"><span class="nav-icon">📈</span> Spot & Futures</a></li>
+        <li><a class="nav-link" data-target="orders"><span class="nav-icon">📜</span> Order Book Log</a></li>
+        <li><a class="nav-link" data-target="analytics"><span class="nav-icon">⚡</span> Quant Analytics</a></li>
+        <li><a class="nav-link" data-target="news"><span class="nav-icon">📡</span> Bloomberg AI Wire</a></li>
+        <li><a class="nav-link" data-target="mainframe" style="border: 1px solid rgba(168,85,247,0.45); border-radius: 6px; margin-top: 5px; background: rgba(168,85,247,0.1);"><span class="nav-icon">✳︎</span> Mainframe A.R.I.A</a></li>
+      </ul>
+
+      <!-- Mini Live Telemetry Card -->
+      <div class="sidebar-telemetry">
+        <div class="telemetry-row">
+          <span>LATENCY</span>
+          <span class="telemetry-val" style="color:var(--accent-green);">6 ms</span>
+        </div>
+        <div class="telemetry-row">
+          <span>PRICE FEED</span>
+          <span class="telemetry-val" style="color:var(--accent-cyan);">CONNECTED (16 ASSETS)</span>
+        </div>
+        <div class="telemetry-row">
+          <span>QUANT ENGINE</span>
+          <span class="telemetry-val">v4.2 INSTITUTIONAL</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Terminal Content Area -->
+    <main class="main-wrapper">
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <div class="status-badge">
+            <div class="status-dot"></div>
+            <span>DEMO MARGIN: $100,000.00</span>
+          </div>
+          <div class="telemetry-pill">
+            <span>UNIVERSE: <strong>16 MARKETS</strong></span>
+          </div>
+        </div>
+
+        <div class="top-right">
+          <!-- Cyber Theme Selector -->
+          <div class="currency-selector-wrapper">
+            <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono)">THEME:</span>
+            <select class="select-box" id="theme-selector">
+              <option value="cyberpunk">🟣 Cyberpunk</option>
+              <option value="amber">🟡 Bloomberg Amber</option>
+              <option value="matrix">🟢 Matrix Emerald</option>
+              <option value="hyperliquid">🔵 Hyperliquid Blue</option>
+            </select>
+          </div>
+
+          <!-- Currency Selector -->
+          <div class="currency-selector-wrapper">
+            <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono)">CURRENCY:</span>
+            <select class="select-box" onchange="window.stateManager.state.settings.currency = this.value; window.stateManager.saveState();">
+              <option value="USD">USD ($)</option>
+              <option value="INR">INR (₹)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="GBP">GBP (£)</option>
+            </select>
+          </div>
+
+          <button class="btn-deposit-top" onclick="document.getElementById('deposit-modal').classList.add('active'); if(window.soundFX) window.soundFX.playClick();">
+            ⚡ Quick Deposit
+          </button>
+        </div>
+      </header>
+
+      <div class="content-area">
+        <!-- 1. DASHBOARD VIEW -->
+        <section id="page-dashboard" class="view-page active">
+          <!-- Top KPI Stats Grid -->
+          <div class="stats-grid">
+            <div class="card card-glow">
+              <div class="card-title">
+                <span>Portfolio Net Worth</span>
+                <span class="badge badge-neutral" id="dash-badge-currency">USD</span>
+              </div>
+              <div class="card-value" id="val-portfolio">$100,000.00</div>
+              <div class="card-subtext" id="dash-sub-networth">Cash + Margin Equity</div>
+            </div>
+            <div class="card">
+              <div class="card-title">
+                <span>Available Cash Balance</span>
+                <button class="btn-xs-action" onclick="document.getElementById('deposit-modal').classList.add('active');">Deposit</button>
+              </div>
+              <div class="card-value" id="val-cash">$100,000.00</div>
+              <div class="card-subtext">Free Margin For Trades</div>
+            </div>
+            <div class="card">
+              <div class="card-title">
+                <span>Unrealized P&L</span>
+                <span id="dash-pnl-pct" style="font-size:0.75rem; font-family:var(--font-mono)">+0.00%</span>
+              </div>
+              <div class="card-value" id="val-pnl">$0.00</div>
+              <div class="card-subtext">Open Floating Profit/Loss</div>
+            </div>
+          </div>
+
+          <!-- Main Terminal Layout: Chart + Order Book Sidebar -->
+          <div class="terminal-grid">
+            <!-- Left Side: Chart Section -->
+            <div class="chart-container">
+              <!-- 1-Click Fast Scalp & Leverage HUD Bar -->
+              <div class="scalp-hud-bar">
+                <div class="scalp-lot-controls">
+                  <span style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono)">LEV:</span>
+                  <button class="btn-leverage-size" data-lev="1">1x</button>
+                  <button class="btn-leverage-size" data-lev="5">5x</button>
+                  <button class="btn-leverage-size active" data-lev="10">10x</button>
+                  <button class="btn-leverage-size" data-lev="25">25x</button>
+                  <button class="btn-leverage-size" data-lev="50">50x</button>
+                  <button class="btn-leverage-size" data-lev="100">100x</button>
+
+                  <span style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono); margin-left:0.35rem;">LOT:</span>
+                  <button class="btn-lot-size" data-lot="0.1">0.1</button>
+                  <button class="btn-lot-size active" data-lot="0.5">0.5</button>
+                  <button class="btn-lot-size" data-lot="1.0">1.0</button>
+                  <button class="btn-lot-size" data-lot="5.0">5.0</button>
+                </div>
+                <div class="scalp-action-buttons">
+                  <button class="btn-fast-buy" id="btn-fast-scalp-buy">⚡ LONG (BUY)</button>
+                  <button class="btn-fast-sell" id="btn-fast-scalp-sell">⚡ SHORT (SELL)</button>
+                </div>
+              </div>
+
+              <div class="chart-wrapper">
+                <canvas id="trading-chart"></canvas>
+              </div>
+            </div>
+
+            <!-- Right Side: Live Order Book & AI Quant Signals -->
+            <div class="orderbook-container">
+              <!-- AI Quant Signals HUD Widget -->
+              <div class="card" style="padding:1rem; margin-bottom:1rem;">
+                <div class="card-title" style="margin-bottom:0.6rem;">
+                  <span>🤖 AI Quant Signals</span>
+                  <span class="status-dot"></span>
+                </div>
+                <div id="ai-quant-signals-container">
+                  <!-- Injected dynamically via JS -->
+                </div>
+              </div>
+
+              <!-- Order Book Depth -->
+              <div class="card" style="padding:1rem; margin-bottom:1rem;">
+                <div class="card-title" style="margin-bottom:0.75rem;">
+                  <span>Global Order Book</span>
+                  <span style="font-size:0.7rem; color:var(--accent-cyan);" id="orderbook-pair">BTC/USD</span>
+                </div>
+                
+                <div class="orderbook-headers">
+                  <span>Price</span>
+                  <span>Size</span>
+                  <span>Total</span>
+                </div>
+
+                <div class="orderbook-list asks-list" id="orderbook-asks"></div>
+
+                <div class="orderbook-spread">
+                  <span id="orderbook-mid-price" style="font-weight:700; color:var(--text-main);">$0.00</span>
+                  <span style="color:var(--text-dim); font-size:0.7rem;">SPREAD 0.01</span>
+                </div>
+
+                <div class="orderbook-list bids-list" id="orderbook-bids"></div>
+              </div>
+
+              <!-- Global Market Flow (Public Feed) -->
+              <div class="card" style="padding:1rem;">
+                <div class="card-title" style="margin-bottom:0.5rem;">
+                  <span>Global Market Flow (Public)</span>
+                  <span class="status-dot"></span>
+                </div>
+                <div class="recent-trades-list" id="recent-trades-list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. PORTFOLIO VIEW -->
+        <section id="page-portfolio" class="view-page">
+          <div class="stats-grid">
+            <div class="card card-glow">
+              <div class="card-title">
+                <span>Total Portfolio Net Worth</span>
+                <button class="btn-sm-action" id="btn-open-deposit">⚡ Add Funds</button>
+              </div>
+              <div class="card-value" id="port-val-total">$100,000.00</div>
+              <div class="card-subtext" id="port-sub-return">24h Return: +0.00%</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Available Free Cash</div>
+              <div class="card-value" id="port-val-cash">$100,000.00</div>
+              <div class="card-subtext" id="port-sub-cash-ratio">100% Liquidity</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Margin Position Value</div>
+              <div class="card-value" id="port-val-equity">$0.00</div>
+              <div class="card-subtext" id="port-sub-holdings-count">0 Open Positions</div>
+            </div>
+          </div>
+
+          <!-- Redesigned High-Impact Asset Allocation Command Section -->
+          <div class="card allocation-card-pro">
+            <div class="card-header-flex">
+              <div>
+                <div class="card-title">Asset Allocation & Risk Exposure</div>
+                <div style="font-size:0.75rem; color:var(--text-muted)">Live capital distribution, portfolio concentration & liquidity risk telemetry</div>
+              </div>
+              <div class="allocation-quick-actions">
+                <span class="badge badge-buy" id="port-risk-badge">🟢 OPTIMAL LIQUIDITY</span>
+              </div>
+            </div>
+
+            <!-- Glowing Multi-Segment Progress Bar -->
+            <div class="allocation-bar-pro-container">
+              <div class="allocation-bar-pro" id="portfolio-allocation-bar"></div>
+            </div>
+
+            <!-- Dynamic Grid of Asset Allocation Cards -->
+            <div class="allocation-cards-grid" id="portfolio-allocation-grid"></div>
+
+            <!-- Quick Capital Deployment HUD -->
+            <div class="allocation-presets-hud">
+              <span style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono)">QUICK DEPLOY:</span>
+              <button type="button" class="btn-alloc-preset" onclick="window.quickOpenTrade('BTC', 'LONG', 0.25)">⚡ 25% BTC</button>
+              <button type="button" class="btn-alloc-preset" onclick="window.quickOpenTrade('ETH', 'LONG', 0.20)">⚡ 20% ETH</button>
+              <button type="button" class="btn-alloc-preset" onclick="window.quickOpenTrade('SOL', 'LONG', 0.15)">⚡ 15% SOL</button>
+              <button type="button" class="btn-alloc-preset" onclick="window.quickOpenTrade('NVDA', 'LONG', 0.20)">⚡ 20% NVDA</button>
+              <button type="button" class="btn-alloc-preset" onclick="window.quickOpenTrade('GOLD', 'LONG', 0.20)">⚡ 20% GOLD</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Your Open Positions & Margin Contracts</div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Asset</th>
+                    <th>Side & Leverage</th>
+                    <th>Position Size</th>
+                    <th>Entry Price</th>
+                    <th>Mark Price</th>
+                    <th>Est. Liq Price</th>
+                    <th>7D Trend</th>
+                    <th>Unrealized P&L</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="portfolio-holdings-list"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. SPOT & FUTURES MARKETS VIEW -->
+        <section id="page-markets" class="view-page">
+          <div class="card">
+            <div class="card-header-flex">
+              <div>
+                <div class="card-title" style="margin-bottom:0.25rem;">Live Spot & Futures Markets (16 Instruments)</div>
+                <div style="font-size:0.75rem; color:var(--text-muted)">Streaming institutional quotes, 7-day sparklines, and 1x-100x leverage</div>
+              </div>
+              <div class="market-filter-chips">
+                <button class="filter-chip active" data-filter="ALL">All Markets (16)</button>
+                <button class="filter-chip" data-filter="CRYPTO">Crypto (6)</button>
+                <button class="filter-chip" data-filter="STOCKS">Tech Stocks (5)</button>
+                <button class="filter-chip" data-filter="COMMODITIES">Commodities (3)</button>
+                <button class="filter-chip" data-filter="FOREX">Forex (2)</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Market Instrument</th>
+                    <th>Current Price</th>
+                    <th>24h Change</th>
+                    <th>7D Sparkline</th>
+                    <th>24h Range</th>
+                    <th>24h Volume</th>
+                    <th>Trade Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="markets-list"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. ORDERS HISTORY VIEW -->
+        <section id="page-orders" class="view-page">
+          <div class="card">
+            <div class="card-header-flex">
+              <div>
+                <div class="card-title" style="margin-bottom:0.25rem;">Your Executed Order Ledger</div>
+                <div style="font-size:0.75rem; color:var(--text-muted)">Permanent record of all manual user trade fills & executions</div>
+              </div>
+              <div>
+                <button class="btn-sm-action" id="btn-export-csv">📥 Export CSV Ledger</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Timestamp</th>
+                    <th>Asset</th>
+                    <th>Side</th>
+                    <th>Leverage</th>
+                    <th>Execution Price</th>
+                    <th>Quantity</th>
+                    <th>Notional Total</th>
+                  </tr>
+                </thead>
+                <tbody id="orders-list"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. ANALYTICS VIEW -->
+        <section id="page-analytics" class="view-page">
+          <div class="stats-grid">
+            <div class="card">
+              <div class="card-title">Realized Net Profit</div>
+              <div class="card-value" id="analytics-realized-pnl">$0.00</div>
+              <div class="card-subtext">Booked Gains / Losses</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Total Orders Placed</div>
+              <div class="card-value" id="analytics-total-trades">0</div>
+              <div class="card-subtext" id="analytics-sub-trades">0 Longs &bull; 0 Shorts</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Win Rate Ratio</div>
+              <div class="card-value val-positive" id="analytics-win-rate">100%</div>
+              <div class="card-subtext">Profitable Executed Orders</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Quant Performance Telemetry</div>
+            <div class="analytics-metrics-grid">
+              <div class="metric-box">
+                <span class="metric-label">PROFIT FACTOR</span>
+                <span class="metric-val" style="color:var(--accent-cyan);">3.12</span>
+              </div>
+              <div class="metric-box">
+                <span class="metric-label">SHARPE RATIO</span>
+                <span class="metric-val" style="color:var(--accent-green);">2.18</span>
+              </div>
+              <div class="metric-box">
+                <span class="metric-label">MAX DRAWDOWN</span>
+                <span class="metric-val" style="color:var(--accent-red);">-1.20%</span>
+              </div>
+              <div class="metric-box">
+                <span class="metric-label">AVG TRADE DURATION</span>
+                <span class="metric-val">3.8 min</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6. BLOOMBERG INTELLIGENCE AI NEWS WIRE -->
+        <section id="page-news" class="view-page">
+          <div class="card">
+            <div class="news-header-banner">
+              <div>
+                <div class="card-title" style="margin-bottom:0.25rem;">📡 Bloomberg Intelligence & Reuters AI Wire</div>
+                <div style="font-size:0.75rem; color:var(--text-muted)">Real-time quantitative sentiment synthesis, market catalysts & direct trade triggers</div>
+              </div>
+              <div class="news-filter-chips">
+                <button class="filter-chip active" data-news-filter="ALL">All Feeds (6)</button>
+                <button class="filter-chip" data-news-filter="BREAKING">🔥 Breaking</button>
+                <button class="filter-chip" data-news-filter="CRYPTO">🪙 Crypto</button>
+                <button class="filter-chip" data-news-filter="TECH">🚀 Tech & AI</button>
+                <button class="filter-chip" data-news-filter="MACRO">🏛️ Macro & Fed</button>
+              </div>
+            </div>
+
+            <!-- Grid of Rich Institutional News Cards -->
+            <div class="news-feed-grid" id="news-feed-container">
+              <!-- Injected dynamically via JS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- 7. MAINFRAME A.R.I.A INTERACTIVE PORTAL (Deeply Connected to KEREOS) -->
+        <section id="page-mainframe" class="view-page">
+          <div class="mainframe-hero-card">
+            <!-- Full Interactive Background Video Container -->
+            <div class="mainframe-video-wrapper">
+              <video 
+                id="kereos-mainframe-video" 
+                class="mainframe-video-el"
+                muted 
+                playsinline 
+                preload="auto"
+                src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260826_041744_63efcd78-bf7d-4039-99e2-2461e8a61903.mp4">
+              </video>
+              <div class="mainframe-video-overlay-gradient"></div>
+            </div>
+
+            <!-- Mainframe Navigation Header with Live KEREOS Bridge -->
+            <div class="mainframe-internal-header">
+              <div class="mainframe-brand-wrap">
+                <span class="mainframe-brand-logo">Mainframe&reg;</span>
+                <span class="mainframe-asterisk">✳︎</span>
+                <span class="badge badge-buy" style="margin-left:0.5rem; font-size:0.65rem;">A.R.I.A QUANT CO-PILOT</span>
+              </div>
+              <div class="mainframe-actions-header">
+                <button type="button" class="btn-sm-action" onclick="document.querySelector('.nav-link[data-target=\'dashboard\']').click()" style="background:rgba(6,182,212,0.15); border-color:var(--accent-cyan); color:var(--accent-cyan); margin-right:0.5rem;">
+                  ⚡ Switch to Terminal
+                </button>
+                <a href="mainframe.html" target="_blank" class="btn-sm-action" style="text-decoration:none;">
+                  ↗ Fullscreen
+                </a>
+              </div>
+            </div>
+
+            <!-- Live Terminal Connection Telemetry Strip -->
+            <div class="aria-terminal-bridge-bar">
+              <div class="aria-bridge-item">
+                <span class="status-dot"></span>
+                <span>CORE STATUS: <strong style="color:var(--accent-cyan)">CONNECTED</strong></span>
+              </div>
+              <div class="aria-bridge-item">
+                <span>NET WORTH: <strong id="aria-net-worth" style="color:var(--text-main)">$100,000.00</strong></span>
+              </div>
+              <div class="aria-bridge-item">
+                <span>ACTIVE PAIRS: <strong style="color:var(--accent-green)">16 MARKETS</strong></span>
+              </div>
+              <div class="aria-bridge-item">
+                <span>CONTACT: <strong style="color:var(--accent-purple)">hanzalnabi5@gmail.com</strong></span>
+              </div>
+            </div>
+
+            <!-- Hero Body Content with Video Scrubber -->
+            <div class="mainframe-hero-content">
+              <!-- 1. Blurred intro label -->
+              <div class="mainframe-intro-label">
+                Hey there, meet A.R.I.A,<br>
+                Mainframe's Adaptive Response Interface Agent
+              </div>
+
+              <!-- 2. Typewriter text -->
+              <p class="mainframe-typewriter-text">
+                <span id="kereos-typewriter-text"></span><span id="kereos-typewriter-cursor" class="typewriter-cursor-blink"></span>
+              </p>
+
+              <!-- 3. Action pill buttons with direct functional routing -->
+              <div id="kereos-pills-wrapper" class="mainframe-pills-row">
+                <button type="button" class="mainframe-pill-btn" onclick="window.openAriaModal('pitch')">
+                  💡 Pitch us an idea
+                </button>
+                <button type="button" class="mainframe-pill-btn" onclick="window.openAriaModal('careers')">
+                  💼 Come work here
+                </button>
+                <button type="button" class="mainframe-pill-btn" onclick="window.openAriaModal('hello')">
+                  👋 Send a brief hello
+                </button>
+                <button type="button" class="mainframe-pill-btn" onclick="window.openAriaModal('operate')">
+                  ⚙️ See how we operate
+                </button>
+
+                <!-- Outline pill button with copy icon for hanzalnabi5@gmail.com -->
+                <button type="button" id="kereos-copy-email-btn" class="mainframe-pill-btn mainframe-pill-outline" title="Click to copy or email hanzalnabi5@gmail.com">
+                  <span>Reach us: <span style="text-decoration:underline;">hanzalnabi5@gmail.com</span></span>
+                  <svg class="mainframe-copy-icon" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3.5" y="3.5" width="7" height="7" rx="1"></rect>
+                    <path d="M8.5 3.5V2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v5.5a1 1 0 0 0 1 1h1.5"></path>
+                  </svg>
+                </button>
+              </div>
+
+              <!-- 4. Quick Action Shortcuts to Main Website Features -->
+              <div class="aria-quick-website-routes">
+                <span style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono); margin-right:0.25rem;">NAVIGATE TERMINAL:</span>
+                <button type="button" class="btn-aria-route" onclick="document.querySelector('.nav-link[data-target=\'dashboard\']').click()">📊 Live Candlestick Chart</button>
+                <button type="button" class="btn-aria-route" onclick="document.querySelector('.nav-link[data-target=\'markets\']').click()">📈 Spot & Futures Quotes</button>
+                <button type="button" class="btn-aria-route" onclick="document.querySelector('.nav-link[data-target=\'portfolio\']').click()">💼 Portfolio & Margin</button>
+                <button type="button" class="btn-aria-route" onclick="document.querySelector('.nav-link[data-target=\'news\']').click()">📡 Bloomberg AI News</button>
+              </div>
+
+              <!-- Interactive Scrub Telemetry Info -->
+              <div class="mainframe-scrub-hint">
+                <span>🖱️ Move cursor horizontally or swipe across view to scrub video timeframe</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Mobile Fixed Bottom Navigation Bar (Ultra Responsive) -->
+  <nav class="mobile-bottom-nav">
+    <a class="mobile-nav-btn active" data-target="dashboard">
+      <span class="mobile-nav-icon">📊</span>
+      <span>Terminal</span>
+    </a>
+    <a class="mobile-nav-btn" data-target="portfolio">
+      <span class="mobile-nav-icon">💼</span>
+      <span>Portfolio</span>
+    </a>
+    <a class="mobile-nav-btn" data-target="markets">
+      <span class="mobile-nav-icon">📈</span>
+      <span>Markets</span>
+    </a>
+    <a class="mobile-nav-btn" data-target="orders">
+      <span class="mobile-nav-icon">📜</span>
+      <span>Orders</span>
+    </a>
+    <a class="mobile-nav-btn" data-target="news">
+      <span class="mobile-nav-icon">📡</span>
+      <span>News</span>
+    </a>
+    <a class="mobile-nav-btn" data-target="mainframe">
+      <span class="mobile-nav-icon">✳︎</span>
+      <span>A.R.I.A</span>
+    </a>
+  </nav>
+
+  <!-- Trade Execution Modal Dialog -->
+  <div class="modal-overlay" id="trade-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modal-title">Execute Order</h3>
+        <button class="btn-close" id="modal-close">&times;</button>
+      </div>
+      <form id="trade-form">
+        <input type="hidden" id="trade-asset-id">
+        <input type="hidden" id="trade-mode">
+        
+        <div style="margin-bottom:0.85rem;">
+          <label style="font-size:0.8rem; color:var(--text-muted)">Position Leverage</label>
+          <div class="pct-group" style="margin:0.35rem 0 0.5rem 0;">
+            <button type="button" class="btn-pct btn-modal-lev" data-lev="1">1x</button>
+            <button type="button" class="btn-pct btn-modal-lev" data-lev="5">5x</button>
+            <button type="button" class="btn-pct btn-modal-lev" data-lev="10">10x</button>
+            <button type="button" class="btn-pct btn-modal-lev" data-lev="25">25x</button>
+          </div>
+        </div>
+
+        <label style="font-size:0.8rem; color:var(--text-muted)">Order Quantity</label>
+        <input type="number" step="any" id="trade-qty" class="select-box" style="width:100%; margin-top:0.35rem" required placeholder="0.00">
+
+        <div class="pct-group">
+          <button type="button" class="btn-pct" data-pct="10">10%</button>
+          <button type="button" class="btn-pct" data-pct="25">25%</button>
+          <button type="button" class="btn-pct" data-pct="50">50%</button>
+          <button type="button" class="btn-pct" data-pct="100">100%</button>
+        </div>
+
+        <button type="submit" id="btn-submit-trade" class="btn-submit btn-buy">CONFIRM ORDER</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Deposit Funds Modal Dialog -->
+  <div class="modal-overlay" id="deposit-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Deposit Demo Trading Capital</h3>
+        <button class="btn-close" id="deposit-close">&times;</button>
+      </div>
+      <form id="deposit-form">
+        <label style="font-size:0.8rem; color:var(--text-muted)">Deposit Amount ($ USD)</label>
+        <input type="number" step="any" id="deposit-amount" class="select-box" style="width:100%; margin-top:0.35rem" required placeholder="10000.00">
+
+        <div class="pct-group">
+          <button type="button" class="btn-pct btn-quick-fund" data-amount="5000">+$5,000</button>
+          <button type="button" class="btn-pct btn-quick-fund" data-amount="25000">+$25,000</button>
+          <button type="button" class="btn-pct btn-quick-fund" data-amount="100000">+$100,000</button>
+        </div>
+
+        <button type="submit" class="btn-submit" style="background:var(--accent-cyan); color:#083344; box-shadow:0 0 15px var(--accent-cyan-glow);">CONFIRM DEPOSIT</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- A.R.I.A Modal 1: Pitch Us An Idea -->
+  <div class="modal-overlay" id="modal-aria-pitch">
+    <div class="modal modal-wide">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <span style="font-size:1.4rem;">💡</span>
+          <div>
+            <h3 style="margin:0;">Pitch an Idea to Mainframe & KEREOS</h3>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Collaborate on algorithmic models, UI features, or quantitative trading bots</span>
+          </div>
+        </div>
+        <button class="btn-close" onclick="window.closeAriaModals()">&times;</button>
+      </div>
+      <form id="form-aria-pitch" onsubmit="window.submitAriaPitch(event)">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.75rem;">
+          <div>
+            <label style="font-size:0.75rem; color:var(--text-muted);">Your Name / Entity</label>
+            <input type="text" id="pitch-name" class="select-box" style="width:100%; margin-top:0.25rem;" required placeholder="Alex Rivera / Quant Lab">
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:var(--text-muted);">Your Contact Email</label>
+            <input type="email" id="pitch-email" class="select-box" style="width:100%; margin-top:0.25rem;" required placeholder="alex@domain.com">
+          </div>
+        </div>
+
+        <div style="margin-bottom:0.75rem;">
+          <label style="font-size:0.75rem; color:var(--text-muted);">Idea Category</label>
+          <select id="pitch-category" class="select-box" style="width:100%; margin-top:0.25rem;">
+            <option value="Algorithmic Trading Bot">🤖 High-Frequency / Algorithmic Trading Bot</option>
+            <option value="Machine Learning Model">🧠 Machine Learning & Sentiment NLP Pipeline</option>
+            <option value="Terminal UI/UX Feature">🎨 Futuristic Terminal Interface & Visualizations</option>
+            <option value="Institutional Liquidity">🏛️ Liquidity & Market Maker Integration</option>
+            <option value="Other Concept">✨ Other Disruptive Concept</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom:0.75rem;">
+          <label style="font-size:0.75rem; color:var(--text-muted);">Idea Details & Architecture Proposal</label>
+          <textarea id="pitch-details" class="select-box" style="width:100%; height:90px; margin-top:0.25rem; resize:none; padding:0.5rem; font-family:var(--font-sans);" required placeholder="Explain your concept, target edge, execution logic, or how Mainframe/KEREOS can co-develop this with you..."></textarea>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem; flex-wrap:wrap; gap:0.5rem;">
+          <a href="mailto:hanzalnabi5@gmail.com?subject=Idea%20Pitch%20for%20Mainframe%20%26%20KEREOS" class="btn-sm-action" style="text-decoration:none;">
+            ✉️ Or Email Directly (hanzalnabi5@gmail.com)
+          </a>
+          <button type="submit" class="btn-submit btn-buy" style="margin:0; width:auto; padding:0.6rem 1.5rem;">
+            🚀 SUBMIT PROPOSAL
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- A.R.I.A Modal 2: Come Work With Us -->
+  <div class="modal-overlay" id="modal-aria-careers">
+    <div class="modal modal-wide">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <span style="font-size:1.4rem;">🚀</span>
+          <div>
+            <h3 style="margin:0;">Join the Mainframe & KEREOS Core Team</h3>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Direct applications to <strong>hanzalnabi5@gmail.com</strong></span>
+          </div>
+        </div>
+        <button class="btn-close" onclick="window.closeAriaModals()">&times;</button>
+      </div>
+
+      <div style="margin-bottom:1rem;">
+        <div style="font-size:0.8rem; font-weight:700; color:var(--accent-cyan); margin-bottom:0.5rem; text-transform:uppercase; letter-spacing:0.05em;">Open Engineering & Research Positions:</div>
+        <div class="careers-roles-list">
+          <div class="career-role-card">
+            <div class="role-title">💻 Senior Quantitative Systems Engineer (Rust / C++)</div>
+            <div class="role-desc">Build low-latency order routing engines, high-throughput WebSocket feeds, and microsecond trade matching kernels.</div>
+          </div>
+          <div class="career-role-card">
+            <div class="role-title">🧠 AI & Machine Learning Sentiment Researcher</div>
+            <div class="role-desc">Develop real-time NLP parsers for live Bloomberg & Reuters feeds to extract tradeable macro catalysts.</div>
+          </div>
+          <div class="career-role-card">
+            <div class="role-title">🎨 Lead Creative Frontend & WebGL Architect</div>
+            <div class="role-desc">Architect futuristic glassmorphic user interfaces, custom canvas charting engines, and tactile audio feedback loops.</div>
+          </div>
+        </div>
+      </div>
+
+      <form id="form-aria-career" onsubmit="window.submitAriaCareer(event)">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.75rem;">
+          <div>
+            <label style="font-size:0.75rem; color:var(--text-muted);">Your Full Name</label>
+            <input type="text" id="career-name" class="select-box" style="width:100%; margin-top:0.25rem;" required placeholder="Jane Doe">
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:var(--text-muted);">Your Email</label>
+            <input type="email" id="career-email" class="select-box" style="width:100%; margin-top:0.25rem;" required placeholder="jane@domain.com">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.75rem;">
+          <div>
+            <label style="font-size:0.75rem; color:var(--text-muted);">Role of Interest</label>
+            <select id="career-role" class="select-box" style="width:100%; margin-top:0.25rem;">
+              <option value="Quantitative Engineer">Rust/C++ Quant Systems Engineer</option>
+              <option value="AI Financial Researcher">AI & Financial NLP Researcher</option>
+              <option value="Frontend WebGL Architect">Lead Creative Frontend / UI Architect</option>
+              <option value="Product & Growth">Product Strategy & Quantitative Growth</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:var(--text-muted);">Portfolio / GitHub / LinkedIn URL</label>
+            <input type="url" id="career-link" class="select-box" style="width:100%; margin-top:0.25rem;" placeholder="https://github.com/yourhandle">
+          </div>
+        </div>
+
+        <div style="margin-bottom:0.75rem;">
+          <label style="font-size:0.75rem; color:var(--text-muted);">Brief Intro & Core Superpower</label>
+          <textarea id="career-intro" class="select-box" style="width:100%; height:60px; margin-top:0.25rem; resize:none; padding:0.5rem; font-family:var(--font-sans);" required placeholder="Tell us about the hardest system problem you've solved..."></textarea>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem; flex-wrap:wrap; gap:0.5rem;">
+          <a href="mailto:hanzalnabi5@gmail.com?subject=Job%20Application%20-%20Mainframe%20%26%20KEREOS" class="btn-sm-action" style="text-decoration:none;">
+            ✉️ Email Resume to hanzalnabi5@gmail.com
+          </a>
+          <button type="submit" class="btn-submit btn-buy" style="margin:0; width:auto; padding:0.6rem 1.5rem;">
+            💼 TRANSMIT APPLICATION
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- A.R.I.A Modal 3: Send a Brief Hello -->
+  <div class="modal-overlay" id="modal-aria-hello">
+    <div class="modal">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <span style="font-size:1.4rem;">👋</span>
+          <div>
+            <h3 style="margin:0;">Send a Brief Hello to A.R.I.A</h3>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Direct dispatch to <strong>hanzalnabi5@gmail.com</strong></span>
+          </div>
+        </div>
+        <button class="btn-close" onclick="window.closeAriaModals()">&times;</button>
+      </div>
+
+      <div style="margin-bottom:0.75rem;">
+        <label style="font-size:0.75rem; color:var(--text-muted);">Quick Greeting Presets:</label>
+        <div class="hello-chips-grid">
+          <button type="button" class="hello-preset-chip" onclick="window.setHelloPreset('⚡ Amazing terminal aesthetics and ultra-responsive layout!')">⚡ Amazing Terminal Design</button>
+          <button type="button" class="hello-preset-chip" onclick="window.setHelloPreset('📈 Love the live candlestick chart and AI signals feature!')">📈 Great Chart & AI Signals</button>
+          <button type="button" class="hello-preset-chip" onclick="window.setHelloPreset('🤝 Interested in discussing an institutional partnership or enterprise license.')">🤝 Enterprise Partnership</button>
+          <button type="button" class="hello-preset-chip" onclick="window.setHelloPreset('✨ Just stopped by to explore Mainframe A.R.I.A! Keep up the brilliant work.')">✨ Exploring A.R.I.A</button>
+        </div>
+      </div>
+
+      <form id="form-aria-hello" onsubmit="window.submitAriaHello(event)">
+        <div style="margin-bottom:0.75rem;">
+          <label style="font-size:0.75rem; color:var(--text-muted);">Your Email Address</label>
+          <input type="email" id="hello-sender-email" class="select-box" style="width:100%; margin-top:0.25rem;" required placeholder="you@domain.com">
+        </div>
+
+        <div style="margin-bottom:0.75rem;">
+          <label style="font-size:0.75rem; color:var(--text-muted);">Your Message</label>
+          <textarea id="hello-message" class="select-box" style="width:100%; height:80px; margin-top:0.25rem; resize:none; padding:0.5rem; font-family:var(--font-sans);" required placeholder="Type your greeting or select a preset above..."></textarea>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem; flex-wrap:wrap; gap:0.5rem;">
+          <a href="mailto:hanzalnabi5@gmail.com?subject=Hello%20from%20Mainframe%20A.R.I.A%20Visitor" class="btn-sm-action" style="text-decoration:none;">
+            ✉️ Mail hanzalnabi5@gmail.com
+          </a>
+          <button type="submit" class="btn-submit" style="background:var(--accent-purple); color:#fff; margin:0; width:auto; padding:0.6rem 1.5rem;">
+            🚀 TRANSMIT MESSAGE
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- A.R.I.A Modal 4: How We Operate -->
+  <div class="modal-overlay" id="modal-aria-operate">
+    <div class="modal modal-wide">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <span style="font-size:1.4rem;">⚙️</span>
+          <div>
+            <h3 style="margin:0;">How Mainframe & KEREOS Operate</h3>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Institutional quantitative architecture & autonomous execution protocol</span>
+          </div>
+        </div>
+        <button class="btn-close" onclick="window.closeAriaModals()">&times;</button>
+      </div>
+
+      <div class="operate-pillars-grid">
+        <div class="operate-pillar-card">
+          <div class="pillar-header">
+            <span class="pillar-num">01</span>
+            <h4>Sub-Millisecond Execution Engine</h4>
+          </div>
+          <p>Ultra-low-latency order management connecting spot & futures order books across 16 global asset pairs (Crypto, Tech Equities, Precious Metals, Forex) with 1x to 100x leverage capability.</p>
+        </div>
+
+        <div class="operate-pillar-card">
+          <div class="pillar-header">
+            <span class="pillar-num">02</span>
+            <h4>Autonomous AI Sentiment Wire</h4>
+          </div>
+          <p>Real-time machine learning inference engines synthesize high-frequency Bloomberg Intelligence and Reuters newsfeeds into actionable sentiment scores, confidence ratings, and direct 1-click execution catalysts.</p>
+        </div>
+
+        <div class="operate-pillar-card">
+          <div class="pillar-header">
+            <span class="pillar-num">03</span>
+            <h4>10X Technical Telemetry Ribbon</h4>
+          </div>
+          <p>Custom 60 FPS HTML5 Canvas engine rendering real-time OHLC candlesticks, EMA 9/21/55 dynamic ribbons, Bollinger Band volatility envelopes, RSI (14) momentum tracking, and MACD sub-oscillators.</p>
+        </div>
+
+        <div class="operate-pillar-card">
+          <div class="pillar-header">
+            <span class="pillar-num">04</span>
+            <h4>Risk Parity & Margin Defense</h4>
+          </div>
+          <p>Algorithmic liquidation price boundaries, real-time unrealized ROE tracking, dynamic cash allocation safety gauges, and zero-latency manual position close triggers.</p>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.25rem; flex-wrap:wrap; gap:0.5rem; background:rgba(6,182,212,0.06); border:1px solid rgba(6,182,212,0.25); padding:0.85rem 1.25rem; border-radius:var(--radius-md);">
+        <div>
+          <strong style="color:var(--accent-cyan); font-size:0.9rem;">Ready to experience the execution speed?</strong>
+          <div style="font-size:0.75rem; color:var(--text-muted);">Explore live spot trading or review your margin allocation.</div>
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+          <button type="button" class="btn-sm-action" onclick="window.closeAriaModals(); document.querySelector('.nav-link[data-target=\'dashboard\']').click();" style="background:var(--accent-cyan); color:#083344; font-weight:700;">⚡ Open Terminal</button>
+          <button type="button" class="btn-sm-action" onclick="window.closeAriaModals(); document.querySelector('.nav-link[data-target=\'markets\']').click();">📈 Browse 16 Markets</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Toast Notification Hub -->
+  <div id="toast-container"></div>
+
+  <!-- Script Modules in strict dependency order -->
+  <script src="js/logos.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/chart.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
